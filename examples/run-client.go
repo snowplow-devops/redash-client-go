@@ -1,0 +1,157 @@
+//
+// Copyright (c) 2020 Snowplow Analytics Ltd. All rights reserved.
+//
+// This program is licensed to you under the Apache License Version 2.0,
+// and you may not use this file except in compliance with the Apache License Version 2.0.
+// You may obtain a copy of the Apache License Version 2.0 at http://www.apache.org/licenses/LICENSE-2.0.
+//
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the Apache License Version 2.0 is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
+//
+
+package main
+
+import (
+	"fmt"
+	"os"
+
+	"github.com/snowplow-devops/redash-client-go/redash"
+)
+
+func main() {
+
+	apiKey := os.Getenv("REDASH_API_KEY")
+	hostname := os.Getenv("REDASH_URL")
+
+	c, err := redash.NewClient(&redash.Config{RedashURI: hostname, APIKey: apiKey})
+	if err != nil {
+		fmt.Println(fmt.Errorf("Error loading client: %q", err))
+		return
+	}
+
+	// --- Data source interactions
+
+	// Get existing Data source
+	dataSource, err := c.GetDataSource(2)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("GetDataSource - %#v", dataSource))
+
+	// DataSource creation
+	postPayload := redash.DataSource{
+		Name: "My new Redshift data source",
+		Type: "redshift",
+		Options: map[string]interface{}{
+			"host":     "localhost",
+			"port":     5439,
+			"dbname":   "snowplow",
+			"user":     "readonlyuser",
+			"password": "S3cuR3PaSsW0rD",
+		},
+	}
+
+	newDataSource, err := c.CreateDataSource(postPayload)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("CreateDataSource - %#v", newDataSource))
+
+	postPayload = redash.DataSource{
+		Name: "My new Redshift data source v2",
+		Type: "redshift",
+		Options: map[string]interface{}{
+			"host":     "localhost",
+			"port":     5439,
+			"dbname":   "snowplow",
+			"user":     "readonlyuser",
+			"password": "S3cuR3PaSsW0rD",
+		},
+	}
+
+	newDataSource, err = c.UpdateDataSource(newDataSource.ID, postPayload)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("UpdateDataSource - %#v", newDataSource))
+
+	// --- Group interactions
+	group, err := c.GetGroup(1)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Error retreiving group: %q", err))
+		return
+	}
+	fmt.Println(fmt.Sprintf("GetGroup - %#v", group))
+
+	// Create a new group
+	groupPayload := redash.Group{
+		Name: "com.acme group",
+	}
+
+	newGroup, err := c.CreateGroup(groupPayload)
+	fmt.Println(fmt.Sprintf("CreateGroup - %#v", newGroup))
+
+	// Add a user to new group
+	err = c.GroupAddUser(newGroup.ID, 1)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	dataSource, err = c.GetDataSource(newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("GroupAddUser>GetDataSource - %#v", dataSource))
+
+	// Add a data source to new group
+	err = c.GroupAddDataSource(newGroup.ID, newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	dataSource, err = c.GetDataSource(newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("GroupAddDataSource>GetDataSource - %#v", dataSource))
+
+	// Remove user from new group
+	err = c.GroupRemoveUser(newGroup.ID, 1)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	newGroup, err = c.GetGroup(newGroup.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("GroupRemoveUser>GetGroup - %#v", newGroup))
+
+	// --- Cleanup
+	err = c.GroupRemoveDataSource(newGroup.ID, newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	dataSource, err = c.GetDataSource(newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(fmt.Sprintf("GroupRemoveDataSource>GetDataSource - %#v", dataSource))
+	// Delete data source
+	err = c.DeleteDataSource(newDataSource.ID)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+}

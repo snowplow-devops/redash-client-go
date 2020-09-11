@@ -1,0 +1,10 @@
+language: go
+env:
+  - GO111MODULE="on"
+go:
+  - "1.15"
+  - tip
+
+script:
+  - make all
+  - make test
