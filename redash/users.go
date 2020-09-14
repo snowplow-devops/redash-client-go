@@ -15,19 +15,13 @@ package redash
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"strconv"
 )
 
-// UserListOptions struct
-type UserListOptions struct {
-	Page       int
-	PageSize   int
-	SearchTerm string
-}
-
-//GetUsers gets an array of all Users available
-func (c *Client) GetUsers(options *UserListOptions) (*UserList, error) {
+//GetUsers returns a paginated list of users
+func (c *Client) GetUsers() (*UserList, error) {
 	path := "/api/users"
 
 	response, err := c.get(path)
@@ -73,8 +67,8 @@ func (c *Client) GetUser(id int) (*User, error) {
 	return &user, nil
 }
 
-//SearchUser finds a list of users matching the query
-func (c *Client) SearchUser(term string) (*UserList, error) {
+//SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
+func (c *Client) SearchUsers(term string) (*UserList, error) {
 	path := "/api/users?q=" + term
 
 	response, err := c.get(path)
@@ -93,4 +87,21 @@ func (c *Client) SearchUser(term string) (*UserList, error) {
 	defer response.Body.Close()
 
 	return &users, nil
+}
+
+// GetUserByEmail returns a single  user from their email address
+func (c *Client) GetUserByEmail(email string) (*User, error) {
+
+	results, err := c.SearchUsers(email)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, result := range results.Results {
+		if result.Email != "" && result.Email == email {
+			return c.GetUser(result.ID)
+		}
+	}
+
+	return nil, fmt.Errorf("No user found with email address: %s", email)
 }

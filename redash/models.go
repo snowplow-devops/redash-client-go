@@ -78,22 +78,19 @@ type UserList struct {
 
 // User struct
 type User struct {
-	AuthType            string    `json:"auth_type,omitempty"`
-	IsDisabled          bool      `json:"is_disabled,omitempty"`
-	UpdatedAt           time.Time `json:"updated_at,omitempty"`
-	ProfileImageURL     string    `json:"profile_image_url,omitempty"`
-	IsInvitationPending bool      `json:"is_invitation_pending,omitempty"`
-	Groups              []struct {
-		ID   int    `json:"id,omitempty"`
-		Name string `json:"name,omitempty"`
-	} `json:"groups,omitempty"`
-	ID              int         `json:"id,omitempty"`
-	Name            string      `json:"name,omitempty"`
-	CreatedAt       time.Time   `json:"created_at,omitempty"`
-	DisabledAt      interface{} `json:"disabled_at,omitempty"`
-	IsEmailVerified bool        `json:"is_email_verified,omitempty"`
-	ActiveAt        time.Time   `json:"active_at,omitempty"`
-	Email           string      `json:"email,omitempty"`
+	AuthType            string      `json:"auth_type,omitempty"`
+	IsDisabled          bool        `json:"is_disabled,omitempty"`
+	UpdatedAt           time.Time   `json:"updated_at,omitempty"`
+	ProfileImageURL     string      `json:"profile_image_url,omitempty"`
+	IsInvitationPending bool        `json:"is_invitation_pending,omitempty"`
+	Groups              []int       `json:"groups,omitempty"`
+	ID                  int         `json:"id,omitempty"`
+	Name                string      `json:"name,omitempty"`
+	CreatedAt           time.Time   `json:"created_at,omitempty"`
+	DisabledAt          interface{} `json:"disabled_at,omitempty"`
+	IsEmailVerified     bool        `json:"is_email_verified,omitempty"`
+	ActiveAt            time.Time   `json:"active_at,omitempty"`
+	Email               string      `json:"email,omitempty"`
 }
 
 // Group struct
