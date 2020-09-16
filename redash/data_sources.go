@@ -116,7 +116,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 						return nil, fmt.Errorf("Invalid field (%s) for type: %s", propName, dataSource.Type)
 					}
 
-					log.Warn(fmt.Sprintf("Ignoring invalid field (%s) for type: %s", propName, dataSource.Type))
+					log.Warn(fmt.Sprintf("[WARN] Ignoring invalid field (%s) for type: %s", propName, dataSource.Type))
 					delete((*dataSource).Options, propName)
 					continue
 				}
