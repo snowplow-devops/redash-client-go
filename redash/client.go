@@ -18,6 +18,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 )
 
 // Client contains an active Redash API client
@@ -27,8 +29,9 @@ type Client struct {
 
 // Config holds the neccesary setup vars
 type Config struct {
-	RedashURI string
-	APIKey    string
+	RedashURI  string
+	APIKey     string
+	StrictMode bool
 }
 
 // NewClient returns a *Client from a valid *Config
@@ -45,12 +48,22 @@ func NewClient(config *Config) (*Client, error) {
 	if config.APIKey == "" {
 		return nil, fmt.Errorf("Missing APIKey")
 	}
+
 	c := &Client{Config: config}
 	return c, nil
 }
 
+// IsStrict returns true if StrictMode is set. This currently causes
+// data_source creates/updates to fail if extraneous properties
+// are present in the payload.
+func (c *Client) IsStrict() bool {
+	return c.Config.StrictMode
+}
+
 func (c *Client) doRequest(method, path, body string) (*http.Response, error) {
 	requestURI := strings.TrimSuffix(c.Config.RedashURI, "/") + path
+
+	log.Debug(fmt.Sprintf("[DEBUG] %s request to %s", method, path))
 
 	response, err := func() (*http.Response, error) {
 		request, err := http.NewRequest(method, requestURI, strings.NewReader(body))
@@ -68,7 +81,7 @@ func (c *Client) doRequest(method, path, body string) (*http.Response, error) {
 	}
 
 	if response.StatusCode < 200 || response.StatusCode > 299 {
-		return nil, fmt.Errorf("status: %d", response.StatusCode)
+		return nil, fmt.Errorf("HTTP Response: %d", response.StatusCode)
 	}
 
 	return response, nil

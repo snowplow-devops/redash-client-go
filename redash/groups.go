@@ -20,7 +20,7 @@ import (
 )
 
 // GetGroups returns a list of Redash groups
-func (c *Client) GetGroups() ([]Group, error) {
+func (c *Client) GetGroups() (*[]Group, error) {
 	path := "/api/groups"
 
 	response, err := c.get(path)
@@ -37,7 +37,7 @@ func (c *Client) GetGroups() ([]Group, error) {
 		return nil, err
 	}
 
-	return groups, nil
+	return &groups, nil
 }
 
 // GetGroup returns an individual Redash group

@@ -1,3 +1,12 @@
+Version 0.2.1 (2020-09-16)
+--------------------------
+Resolving issues around unexpected properties in post/put body for data sources.
+
+Version 0.2.0 (2020-09-14)
+--------------------------
+Fix for inconsistent user object response in Redash API
+Added ability to load user by email address
+
 Version 0.1.0 (2020-09-11)
 --------------------------
 Initial release

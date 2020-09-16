@@ -17,6 +17,7 @@ import (
 	"fmt"
 	"os"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/snowplow-devops/redash-client-go/redash"
 )
 
@@ -24,10 +25,10 @@ func main() {
 
 	apiKey := os.Getenv("REDASH_API_KEY")
 	hostname := os.Getenv("REDASH_URL")
-
+	log.SetLevel(log.DebugLevel)
 	c, err := redash.NewClient(&redash.Config{RedashURI: hostname, APIKey: apiKey})
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error loading client: %q", err))
+		log.Fatal(fmt.Errorf("Error loading client: %q", err))
 		return
 	}
 
@@ -36,7 +37,7 @@ func main() {
 	// Get existing Data source
 	dataSource, err := c.GetDataSource(2)
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 		return
 	}
 	fmt.Println(fmt.Sprintf("GetDataSource - %#v", dataSource))
@@ -54,7 +55,7 @@ func main() {
 		},
 	}
 
-	newDataSource, err := c.CreateDataSource(postPayload)
+	newDataSource, err := c.CreateDataSource(&postPayload)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -73,7 +74,7 @@ func main() {
 		},
 	}
 
-	newDataSource, err = c.UpdateDataSource(newDataSource.ID, postPayload)
+	newDataSource, err = c.UpdateDataSource(newDataSource.ID, &postPayload)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -147,6 +148,7 @@ func main() {
 		return
 	}
 	fmt.Println(fmt.Sprintf("GroupRemoveDataSource>GetDataSource - %#v", dataSource))
+
 	// Delete data source
 	err = c.DeleteDataSource(newDataSource.ID)
 	if err != nil {
