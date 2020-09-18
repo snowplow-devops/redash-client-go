@@ -17,7 +17,32 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"strconv"
+	"time"
 )
+
+// Group struct
+type Group struct {
+	CreatedAt   time.Time `json:"created_at,omitempty"`
+	Permissions []string  `json:"permissions,omitempty"`
+	Type        string    `json:"type,omitempty"`
+	ID          int       `json:"id,omitempty"`
+	Name        string    `json:"name,omitempty"`
+}
+
+// GroupUser struct
+type GroupUser struct {
+	MemberID int `json:"user_id"`
+}
+
+// GroupDataSource struct
+type GroupDataSource struct {
+	DataSourceID int `json:"data_source_id"`
+}
+
+// GroupCreatePayload struct
+type GroupCreatePayload struct {
+	Name string `json:"name"`
+}
 
 // GetGroups returns a list of Redash groups
 func (c *Client) GetGroups() (*[]Group, error) {
@@ -66,10 +91,10 @@ func (c *Client) GetGroup(id int) (*Group, error) {
 }
 
 // CreateGroup creates a new Redash group
-func (c *Client) CreateGroup(group Group) (*Group, error) {
+func (c *Client) CreateGroup(groupPayload *GroupCreatePayload) (*Group, error) {
 	path := "/api/groups"
 
-	payload, err := json.Marshal(group)
+	payload, err := json.Marshal(groupPayload)
 	if err != nil {
 		return nil, err
 	}
@@ -85,6 +110,8 @@ func (c *Client) CreateGroup(group Group) (*Group, error) {
 		return nil, err
 	}
 
+	group := Group{}
+
 	err = json.Unmarshal(body, &group)
 	if err != nil {
 		return nil, err
@@ -94,7 +121,7 @@ func (c *Client) CreateGroup(group Group) (*Group, error) {
 }
 
 // UpdateGroup updates an existing Redash group
-func (c *Client) UpdateGroup(id int, group Group) (*Group, error) {
+func (c *Client) UpdateGroup(id int, group *Group) (*Group, error) {
 	path := "/api/groups/" + strconv.Itoa(id)
 
 	payload, err := json.Marshal(group)
@@ -118,7 +145,7 @@ func (c *Client) UpdateGroup(id int, group Group) (*Group, error) {
 		return nil, err
 	}
 
-	return &group, nil
+	return group, nil
 }
 
 // DeleteGroup deletes a Redash group

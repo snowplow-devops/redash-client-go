@@ -18,7 +18,63 @@ import (
 	"fmt"
 	"io/ioutil"
 	"strconv"
+	"time"
 )
+
+// UserList struct
+type UserList struct {
+	Count    int `json:"count"`
+	Page     int `json:"page"`
+	PageSize int `json:"page_size"`
+	Results  []struct {
+		AuthType            string    `json:"auth_type,omitempty"`
+		IsDisabled          bool      `json:"is_disabled,omitempty"`
+		UpdatedAt           time.Time `json:"updated_at,omitempty"`
+		ProfileImageURL     string    `json:"profile_image_url,omitempty"`
+		IsInvitationPending bool      `json:"is_invitation_pending,omitempty"`
+		Groups              []struct {
+			ID   int    `json:"id,omitempty"`
+			Name string `json:"name,omitempty"`
+		} `json:"groups,omitempty"`
+		ID              int         `json:"id,omitempty"`
+		Name            string      `json:"name,omitempty"`
+		CreatedAt       time.Time   `json:"created_at,omitempty"`
+		DisabledAt      interface{} `json:"disabled_at,omitempty"`
+		IsEmailVerified bool        `json:"is_email_verified,omitempty"`
+		ActiveAt        time.Time   `json:"active_at,omitempty"`
+		Email           string      `json:"email,omitempty"`
+	} `json:"results,omitempty"`
+}
+
+// User representation
+type User struct {
+	AuthType            string      `json:"auth_type,omitempty"`
+	IsDisabled          bool        `json:"is_disabled,omitempty"`
+	UpdatedAt           time.Time   `json:"updated_at,omitempty"`
+	ProfileImageURL     string      `json:"profile_image_url,omitempty"`
+	IsInvitationPending bool        `json:"is_invitation_pending,omitempty"`
+	Groups              []int       `json:"groups,omitempty"`
+	ID                  int         `json:"id,omitempty"`
+	Name                string      `json:"name,omitempty"`
+	CreatedAt           time.Time   `json:"created_at,omitempty"`
+	DisabledAt          interface{} `json:"disabled_at,omitempty"`
+	IsEmailVerified     bool        `json:"is_email_verified,omitempty"`
+	ActiveAt            time.Time   `json:"active_at,omitempty"`
+	Email               string      `json:"email,omitempty"`
+}
+
+// UserCreatePayload struct for mutating users.
+type UserCreatePayload struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+// UserUpdatePayload struct for mutating users.
+type UserUpdatePayload struct {
+	Name   string `json:"name"`
+	Email  string `json:"email"`
+	Groups []int  `json:"groups"`
+}
 
 //GetUsers returns a paginated list of users
 func (c *Client) GetUsers() (*UserList, error) {
@@ -47,6 +103,66 @@ func (c *Client) GetUser(id int) (*User, error) {
 	path := "/api/users/" + strconv.Itoa(id)
 
 	response, err := c.get(path)
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	user := User{}
+
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+// CreateUser creates a new Redash user
+func (c *Client) CreateUser(userCreatePayload *UserCreatePayload) (*User, error) {
+	path := "/api/users"
+
+	payload, err := json.Marshal(userCreatePayload)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.post(path, string(payload))
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	user := User{}
+
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+// UpdateUser updates an existing Redash user
+func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User, error) {
+	path := "/api/users/" + strconv.Itoa(id)
+
+	payload, err := json.Marshal(userUpdatePayload)
+	if err != nil {
+		return nil, err
+	}
+
+	response, err := c.post(path, string(payload))
 	if err != nil {
 		return nil, err
 	}

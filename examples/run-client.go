@@ -25,6 +25,7 @@ func main() {
 
 	apiKey := os.Getenv("REDASH_API_KEY")
 	hostname := os.Getenv("REDASH_URL")
+
 	log.SetLevel(log.DebugLevel)
 	c, err := redash.NewClient(&redash.Config{RedashURI: hostname, APIKey: apiKey})
 	if err != nil {
@@ -35,7 +36,7 @@ func main() {
 	// --- Data source interactions
 
 	// Get existing Data source
-	dataSource, err := c.GetDataSource(2)
+	dataSource, err := c.GetDataSource(1)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -49,8 +50,8 @@ func main() {
 		Options: map[string]interface{}{
 			"host":     "localhost",
 			"port":     5439,
-			"dbname":   "snowplow",
-			"user":     "readonlyuser",
+			"dbname":   "my_database",
+			"user":     "user_name",
 			"password": "S3cuR3PaSsW0rD",
 		},
 	}
@@ -68,8 +69,8 @@ func main() {
 		Options: map[string]interface{}{
 			"host":     "localhost",
 			"port":     5439,
-			"dbname":   "snowplow",
-			"user":     "readonlyuser",
+			"dbname":   "my_database",
+			"user":     "user_name",
 			"password": "S3cuR3PaSsW0rD",
 		},
 	}
@@ -90,11 +91,11 @@ func main() {
 	fmt.Println(fmt.Sprintf("GetGroup - %#v", group))
 
 	// Create a new group
-	groupPayload := redash.Group{
+	groupPayload := redash.GroupCreatePayload{
 		Name: "com.acme group",
 	}
 
-	newGroup, err := c.CreateGroup(groupPayload)
+	newGroup, err := c.CreateGroup(&groupPayload)
 	fmt.Println(fmt.Sprintf("CreateGroup - %#v", newGroup))
 
 	// Add a user to new group

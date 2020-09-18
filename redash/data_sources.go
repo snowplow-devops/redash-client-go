@@ -22,6 +22,40 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+// DataSource struct
+type DataSource struct {
+	ID                 int                    `json:"id,omitempty"`
+	Name               string                 `json:"name,omitempty"`
+	ScheduledQueueName string                 `json:"scheduled_queue_name,omitempty"`
+	QueueName          string                 `json:"queue_name,omitempty"`
+	Options            map[string]interface{} `json:"options,omitempty"`
+	Paused             int                    `json:"paused,omitempty"`
+	PauseReason        string                 `json:"pause_reason,omitempty"`
+	Type               string                 `json:"type,omitempty"`
+	Syntax             string                 `json:"syntax,omitempty"`
+	Groups             map[int]bool           `json:"groups,omitempty"`
+}
+
+// DataSourceType struct
+type DataSourceType struct {
+	Type                string `json:"type"`
+	Name                string `json:"name,omitempty"`
+	ConfigurationSchema struct {
+		Secret     []string                               `json:"secret,omitempty"`
+		Required   []string                               `json:"required,omitempty"`
+		Type       string                                 `json:"type,omitempty"`
+		Order      []string                               `json:"order,omitempty"`
+		Properties map[string]DataSourceTypePropertyField `json:"properties,omitempty"`
+	} `json:"configuration_schema,omitempty"`
+}
+
+// DataSourceTypePropertyField struct
+type DataSourceTypePropertyField struct {
+	Type    string
+	Title   string
+	Default interface{}
+}
+
 //GetDataSources gets an array of all DataSources available
 func (c *Client) GetDataSources() (*[]DataSource, error) {
 	path := "/api/data_sources"

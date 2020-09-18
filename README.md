@@ -1,10 +1,31 @@
-# Redash API Client
+# Redash API Client #
+[![Build Status][travis-image]][travis] [![Go Report Card][goreport-image]][goreport] [![License][license-image]][license]
 
-## Overview
+## Overview ##
 
-Simple API client for interacting with Redash
+A Simple API client library for interacting with Redash written in Go. 
 
-## Quick start
+## Quick start ##
+
+### Using go modules (aka. `go mod`) ###
+
+In your go files, simply use:
+```go
+import "github.com/snowplow-devops/redash-client-go"
+```
+
+Then next `go mod tidy` or `go test` invocation will automatically
+populate your `go.mod` with the last redash-client-go release, now
+[![Version](https://img.shields.io/github/tag/snowplow-devops/redash-client-go.svg)](https://github.com/snowplow-devops/redash-client-go/releases).
+
+Note you can use `go mod vendor` to vendor your dependencies.
+
+## Usage ##
+
+Functional examples can be found in
+* https://github.com/snowplow-devops/redash-client-go/tree/master/examples 
+
+## Development ##
 
 Assuming git installed:
 
@@ -12,7 +33,6 @@ Assuming git installed:
 $ git clone https://github.com/snowplow-devops/redash-client-go
 $ cd redash-client-go
 $ make test
-$ make
 ```
 
 To remove all build files:

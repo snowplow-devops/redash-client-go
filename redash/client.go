@@ -11,6 +11,7 @@
 // See the Apache License Version 2.0 for the specific language governing permissions and limitations there under.
 //
 
+// Package redash is a simple redash client library
 package redash
 
 import (

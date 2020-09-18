@@ -1,3 +1,7 @@
+Version 0.3.0 (2020-09-18)
+--------------------------
+First public release
+
 Version 0.2.1 (2020-09-16)
 --------------------------
 Resolving issues around unexpected properties in post/put body for data sources.
