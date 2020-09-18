@@ -96,6 +96,10 @@ func main() {
 	}
 
 	newGroup, err := c.CreateGroup(&groupPayload)
+	if err != nil {
+		fmt.Println(fmt.Errorf("Error creating group: %q", err))
+		return
+	}
 	fmt.Println(fmt.Sprintf("CreateGroup - %#v", newGroup))
 
 	// Add a user to new group

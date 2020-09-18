@@ -28,7 +28,7 @@ type Client struct {
 	Config *Config
 }
 
-// Config holds the neccesary setup vars
+// Config holds the necessary setup vars
 type Config struct {
 	RedashURI  string
 	APIKey     string
