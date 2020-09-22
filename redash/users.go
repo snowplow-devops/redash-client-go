@@ -73,7 +73,7 @@ type UserCreatePayload struct {
 type UserUpdatePayload struct {
 	Name   string `json:"name"`
 	Email  string `json:"email"`
-	Groups []int  `json:"groups"`
+	Groups []int  `json:"group_ids"`
 }
 
 //GetUsers returns a paginated list of users
