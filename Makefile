@@ -1,4 +1,4 @@
-.PHONY: all format lint tidy test clean
+.PHONY: format lint tidy test clean
 # -----------------------------------------------------------------------------
 #  CONSTANTS
 # -----------------------------------------------------------------------------
@@ -12,13 +12,6 @@ build_dir = build
 coverage_dir  = $(build_dir)/coverage
 coverage_out  = $(coverage_dir)/coverage.out
 coverage_html = $(coverage_dir)/coverage.html
-
-# -----------------------------------------------------------------------------
-#  BUILDING
-# -----------------------------------------------------------------------------
-
-all:
-	GO111MODULE=on go build ./$(src_dir)
 
 # -----------------------------------------------------------------------------
 #  FORMATTING

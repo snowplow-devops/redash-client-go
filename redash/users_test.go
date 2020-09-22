@@ -31,9 +31,7 @@ func TestGetUser(t *testing.T) {
 		httpmock.NewStringResponder(200, `{"id": 1, "name": "Existing User"}`))
 
 	user, err := c.GetUser(1)
-	if err != nil {
-		panic(err.Error())
-	}
+	assert.Nil(err)
 
 	assert.Equal(1, user.ID)
 	assert.Equal("Existing User", user.Name)
@@ -55,9 +53,7 @@ func TestCreateUser(t *testing.T) {
 	}
 
 	user, err := c.CreateUser(&userPayload)
-	if err != nil {
-		panic(err.Error())
-	}
+	assert.Nil(err)
 
 	assert.Equal(2, user.ID)
 	assert.Equal("New User", user.Name)
@@ -80,9 +76,7 @@ func TestUpdateUser(t *testing.T) {
 	}
 
 	user, err := c.UpdateUser(2, &userPayload)
-	if err != nil {
-		panic(err.Error())
-	}
+	assert.Nil(err)
 
 	assert.Equal(2, user.ID)
 	assert.Equal("New User Updated", user.Name)
@@ -103,9 +97,7 @@ func TestGetUserByEmail(t *testing.T) {
 		httpmock.NewStringResponder(200, `{"id": 1, "name": "Existing User", "email": "tëst@email.com"}`))
 
 	user, err := c.GetUserByEmail("tëst@email.com")
-	if err != nil {
-		panic(err.Error())
-	}
+	assert.Nil(err)
 
 	assert.Equal(1, user.ID)
 	assert.Equal("tëst@email.com", user.Email)
@@ -114,8 +106,20 @@ func TestGetUserByEmail(t *testing.T) {
 		httpmock.NewStringResponder(200, `{"count": 0, "page": 1, "page_size": 25, "results": []}`))
 
 	user, err = c.GetUserByEmail("tëst-not-found@email.com")
-	if err != nil {
-		assert.Equal("No user found with email address: tëst-not-found@email.com", err.Error())
-	}
+	assert.NotNil(err)
+}
 
+func TestDisableUser(t *testing.T) {
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	httpmock.RegisterResponder("POST", "https://com.acme/api/users/1/disable",
+		httpmock.NewStringResponder(200, ""))
+
+	err := c.DisableUser(1)
+
+	assert.Nil(err)
 }
