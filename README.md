@@ -1,5 +1,8 @@
 # Redash API Client #
-[![Build Status][travis-image]][travis] [![Go Report Card][goreport-image]][goreport] [![License][license-image]][license]
+[![Release][release-image]](releases) 
+[![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
+[![Go Report Card][goreport-image]][goreport]
+[![License][license-image]][license]
 
 ## Overview ##
 
