@@ -67,7 +67,7 @@ func TestUpdateUser(t *testing.T) {
 	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
 
 	httpmock.RegisterResponder("POST", "https://com.acme/api/users/2",
-		httpmock.NewStringResponder(200, `{"id": 2, "name": "New User Updated", "email": "test-update@email.com"}`))
+		httpmock.NewStringResponder(200, `{"id": 2, "name": "New User Updated", "email": "test-update@email.com", "groups": [2,3,4]}`))
 
 	userPayload := UserUpdatePayload{
 		Name:   "New User Updated",
