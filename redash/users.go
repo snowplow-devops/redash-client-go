@@ -183,6 +183,24 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 	return &user, nil
 }
 
+//DisableUser disables an active user.
+func (c *Client) DisableUser(id int) error {
+	path := "/api/users/" + strconv.Itoa(id) + "/disable"
+
+	response, err := c.post(path, "")
+	if err != nil {
+		return err
+	}
+
+	defer response.Body.Close()
+	_, err = ioutil.ReadAll(response.Body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 //SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
 func (c *Client) SearchUsers(term string) (*UserList, error) {
 	path := "/api/users?q=" + term
