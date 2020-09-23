@@ -1,5 +1,5 @@
 # Redash API Client #
-[![Release][release-image]](releases) 
+[![Release](https://img.shields.io/github/v/release/snowplow-devops/redash-client-go)](releases)  
 [![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
 [![Go Report Card][goreport-image]][goreport]
 [![License][license-image]][license]
