@@ -1,10 +1,7 @@
 # Redash API Client #
 [![Release](https://img.shields.io/github/v/release/snowplow-devops/redash-client-go)](releases) 
-
 [![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
-
 [![Go Report Card](https://goreportcard.com/badge/github.com/snowplow-devops/redash-client-go)](https://goreportcard.com/report/github.com/snowplow-devops/redash-client-go)
-
 [![License][license-image]][license]
 
 ## Overview ##
@@ -17,14 +14,27 @@ A Simple API client library for interacting with Redash written in Go.
 
 In your go files, simply use:
 ```go
-import "github.com/snowplow-devops/redash-client-go"
+import "github.com/snowplow-devops/redash-client-go/redash"
 ```
 
 Then next `go mod tidy` or `go test` invocation will automatically
 populate your `go.mod` with the last redash-client-go release, now
 [![Version](https://img.shields.io/github/tag/snowplow-devops/redash-client-go.svg)](https://github.com/snowplow-devops/redash-client-go/releases).
+(Note you can use `go mod vendor` to vendor your dependencies.)
 
-Note you can use `go mod vendor` to vendor your dependencies.
+From there, you will need to setup a new client in order to access API methods:
+```
+config := redash.Config{
+  RedashURI: "https://acme.com/",
+  APIKey: "<Your personal API token from your Redash user profile>",
+}
+
+c, err := redash.NewClient(&config)
+if err != nil {
+  log.Fatal(fmt.Errorf("Error loading client: %q", err))
+  return
+}
+```
 
 ## Usage ##
 
