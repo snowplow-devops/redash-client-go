@@ -1,7 +1,10 @@
 # Redash API Client #
-[![Release](https://img.shields.io/github/v/release/snowplow-devops/redash-client-go)](releases)  
+[![Release](https://img.shields.io/github/v/release/snowplow-devops/redash-client-go)](releases) 
+
 [![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
-[![Go Report Card][goreport-image]][goreport]
+
+[![Go Report Card](https://goreportcard.com/badge/github.com/snowplow-devops/redash-client-go)](https://goreportcard.com/report/github.com/snowplow-devops/redash-client-go)
+
 [![License][license-image]][license]
 
 ## Overview ##
