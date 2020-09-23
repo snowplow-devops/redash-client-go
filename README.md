@@ -1,8 +1,5 @@
 # Redash API Client #
-[![Release][release-image]](releases) 
-[![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
-[![Go Report Card][goreport-image]][goreport]
-[![License][license-image]][license]
+[![Actions Status][actions-image]][actions] [![Go Report Card][goreport-image]][goreport] [![Release][release-image]][releases] [![License][license-image]][license]
 
 ## Overview ##
 
@@ -14,14 +11,27 @@ A Simple API client library for interacting with Redash written in Go.
 
 In your go files, simply use:
 ```go
-import "github.com/snowplow-devops/redash-client-go"
+import "github.com/snowplow-devops/redash-client-go/redash"
 ```
 
 Then next `go mod tidy` or `go test` invocation will automatically
 populate your `go.mod` with the last redash-client-go release, now
 [![Version](https://img.shields.io/github/tag/snowplow-devops/redash-client-go.svg)](https://github.com/snowplow-devops/redash-client-go/releases).
+(Note you can use `go mod vendor` to vendor your dependencies.)
 
-Note you can use `go mod vendor` to vendor your dependencies.
+From there, you will need to setup a new client in order to access API methods:
+```
+config := redash.Config{
+  RedashURI: "https://acme.com/",
+  APIKey: "<Your personal API token from your Redash user profile>",
+}
+
+c, err := redash.NewClient(&config)
+if err != nil {
+  log.Fatal(fmt.Errorf("Error loading client: %q", err))
+  return
+}
+```
 
 ## Usage ##
 
@@ -67,10 +77,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[travis-image]: https://travis-ci.com/snowplow-devops/redash-client-go.png?branch=master
-[travis]: https://travis-ci.com/snowplow-devops/redash-client-go
+[actions-image]: https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg
+[actions]: https://github.com/snowplow-devops/redash-client-go/actions
 
-[release-image]: http://img.shields.io/badge/release-0.1.0-6ad7e5.svg?style=flat
+[release-image]: https://img.shields.io/github/v/release/snowplow-devops/redash-client-go?style=flat&color=6ad7e5
 [releases]: https://github.com/snowplow-devops/redash-client-go/releases
 
 [license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
