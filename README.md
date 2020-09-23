@@ -1,8 +1,5 @@
 # Redash API Client #
-[![Release](https://img.shields.io/github/v/release/snowplow-devops/redash-client-go)](releases) 
-[![Actions Status](https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg)](https://github.com/snowplow-devops/redash-client-go/actions)
-[![Go Report Card](https://goreportcard.com/badge/github.com/snowplow-devops/redash-client-go)](https://goreportcard.com/report/github.com/snowplow-devops/redash-client-go)
-[![License][license-image]][license]
+[![Actions Status][actions-image]][actions] [![Go Report Card][goreport-image]][goreport] [![Release][release-image]][releases] [![License][license-image]][license]
 
 ## Overview ##
 
@@ -80,10 +77,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-[travis-image]: https://travis-ci.com/snowplow-devops/redash-client-go.png?branch=master
-[travis]: https://travis-ci.com/snowplow-devops/redash-client-go
+[actions-image]: https://github.com/snowplow-devops/redash-client-go/workflows/ci/badge.svg
+[actions]: https://github.com/snowplow-devops/redash-client-go/actions
 
-[release-image]: http://img.shields.io/badge/release-0.1.0-6ad7e5.svg?style=flat
+[release-image]: https://img.shields.io/github/v/release/snowplow-devops/redash-client-go?style=flat&color=6ad7e5
 [releases]: https://github.com/snowplow-devops/redash-client-go/releases
 
 [license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
