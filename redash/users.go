@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -80,7 +81,8 @@ type UserUpdatePayload struct {
 func (c *Client) GetUsers() (*UserList, error) {
 	path := "/api/users"
 
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 
 	if err != nil {
 		return nil, err
@@ -102,7 +104,8 @@ func (c *Client) GetUsers() (*UserList, error) {
 func (c *Client) GetUser(id int) (*User, error) {
 	path := "/api/users/" + strconv.Itoa(id)
 
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -132,7 +135,8 @@ func (c *Client) CreateUser(userCreatePayload *UserCreatePayload) (*User, error)
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +166,8 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -187,7 +192,8 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 func (c *Client) DisableUser(id int) error {
 	path := "/api/users/" + strconv.Itoa(id) + "/disable"
 
-	response, err := c.post(path, "")
+	query := url.Values{}
+	response, err := c.post(path, "", query)
 	if err != nil {
 		return err
 	}
@@ -203,9 +209,11 @@ func (c *Client) DisableUser(id int) error {
 
 //SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
 func (c *Client) SearchUsers(term string) (*UserList, error) {
-	path := "/api/users?q=" + term
+	path := "/api/users"
 
-	response, err := c.get(path)
+	query := url.Values{}
+	query.Add("q", term)
+	response, err := c.get(path, query)
 
 	if err != nil {
 		return nil, err

@@ -16,6 +16,7 @@ package redash
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net/url"
 	"strconv"
 	"time"
 )
@@ -48,7 +49,8 @@ type GroupCreatePayload struct {
 func (c *Client) GetGroups() (*[]Group, error) {
 	path := "/api/groups"
 
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 
 	if err != nil {
 		return nil, err
@@ -69,7 +71,8 @@ func (c *Client) GetGroups() (*[]Group, error) {
 func (c *Client) GetGroup(id int) (*Group, error) {
 	path := "/api/groups/" + strconv.Itoa(id)
 
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +102,8 @@ func (c *Client) CreateGroup(groupPayload *GroupCreatePayload) (*Group, error) {
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -129,7 +133,8 @@ func (c *Client) UpdateGroup(id int, group *Group) (*Group, error) {
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -152,7 +157,8 @@ func (c *Client) UpdateGroup(id int, group *Group) (*Group, error) {
 func (c *Client) DeleteGroup(id int) error {
 	path := "/api/groups/" + strconv.Itoa(id)
 
-	_, err := c.delete(path)
+	query := url.Values{}
+	_, err := c.delete(path, query)
 	if err != nil {
 		return err
 	}
@@ -170,7 +176,8 @@ func (c *Client) GroupAddUser(groupID int, userID int) error {
 		return err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return err
 	}
@@ -183,7 +190,8 @@ func (c *Client) GroupAddUser(groupID int, userID int) error {
 func (c *Client) GroupRemoveUser(groupID int, userID int) error {
 	path := "/api/groups/" + strconv.Itoa(groupID) + "/members/" + strconv.Itoa(userID)
 
-	response, err := c.delete(path)
+	query := url.Values{}
+	response, err := c.delete(path, query)
 	if err != nil {
 		return err
 	}
@@ -202,7 +210,8 @@ func (c *Client) GroupAddDataSource(groupID int, dataSourceID int) error {
 		return err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return err
 	}
@@ -215,7 +224,8 @@ func (c *Client) GroupAddDataSource(groupID int, dataSourceID int) error {
 func (c *Client) GroupRemoveDataSource(groupID int, dataSourceID int) error {
 	path := "/api/groups/" + strconv.Itoa(groupID) + "/data_sources/" + strconv.Itoa(dataSourceID)
 
-	response, err := c.delete(path)
+	query := url.Values{}
+	response, err := c.delete(path, query)
 	if err != nil {
 		return err
 	}
