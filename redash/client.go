@@ -61,7 +61,7 @@ func (c *Client) IsStrict() bool {
 	return c.Config.StrictMode
 }
 
-func (c *Client) doRequest(method, path, body string) (*http.Response, error) {
+func (c *Client) doRequest(method, path, body string, query url.Values) (*http.Response, error) {
 	requestURI := strings.TrimSuffix(c.Config.RedashURI, "/") + path
 
 	log.Debug(fmt.Sprintf("[DEBUG] %s request to %s", method, path))
@@ -74,6 +74,7 @@ func (c *Client) doRequest(method, path, body string) (*http.Response, error) {
 
 		request.Header.Add("Content-Type", "application/json")
 		request.Header.Set("Authorization", "Key "+c.Config.APIKey)
+		request.URL.RawQuery = query.Encode()
 
 		return http.DefaultClient.Do(request)
 	}()
@@ -88,18 +89,18 @@ func (c *Client) doRequest(method, path, body string) (*http.Response, error) {
 	return response, nil
 }
 
-func (c *Client) get(path string) (*http.Response, error) {
-	return c.doRequest(http.MethodGet, path, "")
+func (c *Client) get(path string, query url.Values) (*http.Response, error) {
+	return c.doRequest(http.MethodGet, path, "", query)
 }
 
-func (c *Client) post(path string, payload string) (*http.Response, error) {
-	return c.doRequest(http.MethodPost, path, payload)
+func (c *Client) post(path string, payload string, query url.Values) (*http.Response, error) {
+	return c.doRequest(http.MethodPost, path, payload, query)
 }
 
-func (c *Client) put(path string, payload string) (*http.Response, error) {
-	return c.doRequest(http.MethodPut, path, payload)
+func (c *Client) put(path string, payload string, query url.Values) (*http.Response, error) {
+	return c.doRequest(http.MethodPut, path, payload, query)
 }
 
-func (c *Client) delete(path string) (*http.Response, error) {
-	return c.doRequest(http.MethodDelete, path, "")
+func (c *Client) delete(path string, query url.Values) (*http.Response, error) {
+	return c.doRequest(http.MethodDelete, path, "", query)
 }

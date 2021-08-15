@@ -17,6 +17,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
@@ -59,8 +60,8 @@ type DataSourceTypePropertyField struct {
 //GetDataSources gets an array of all DataSources available
 func (c *Client) GetDataSources() (*[]DataSource, error) {
 	path := "/api/data_sources"
-
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 
 	if err != nil {
 		return nil, err
@@ -80,8 +81,8 @@ func (c *Client) GetDataSources() (*[]DataSource, error) {
 //GetDataSource gets a specific DataSource
 func (c *Client) GetDataSource(id int) (*DataSource, error) {
 	path := "/api/data_sources/" + strconv.Itoa(id)
-
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 	if err != nil {
 		return nil, err
 	}
@@ -105,8 +106,8 @@ func (c *Client) GetDataSource(id int) (*DataSource, error) {
 //GetDataSourceTypes gets all available types with configuration details
 func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 	path := "/api/data_sources/types"
-
-	response, err := c.get(path)
+	query := url.Values{}
+	response, err := c.get(path, query)
 
 	if err != nil {
 		return nil, err
@@ -193,7 +194,8 @@ func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, e
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -228,7 +230,8 @@ func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataS
 		return nil, err
 	}
 
-	response, err := c.post(path, string(payload))
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -253,7 +256,8 @@ func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataS
 func (c *Client) DeleteDataSource(id int) error {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 
-	_, err := c.delete(path)
+	query := url.Values{}
+	_, err := c.delete(path, query)
 	if err != nil {
 		return err
 	}
