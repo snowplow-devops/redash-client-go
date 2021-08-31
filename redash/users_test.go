@@ -90,7 +90,7 @@ func TestGetUserByEmail(t *testing.T) {
 
 	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
 
-	httpmock.RegisterResponder("GET", "https://com.acme/api/users?q=tëst@email.com",
+	httpmock.RegisterResponder("GET", "https://com.acme/api/users?q=t%C3%ABst%40email.com",
 		httpmock.NewStringResponder(200, `{"count": 1, "page": 1, "page_size": 25, "results": [ {"id": 1, "name": "Existing User", "email": "tëst@email.com"} ]}`))
 
 	httpmock.RegisterResponder("GET", "https://com.acme/api/users/1",
