@@ -127,6 +127,10 @@ func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 // SanitizeDataSourceOptions checks the validity of the options field in a
 // DataSource.Option against Redash's API and cleans up when possible
 func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource, error) {
+	whitelistedProps := map[string]bool{
+		"ssh_tunnel": true,
+	}
+
 	dataSourceTypes, err := c.GetDataSourceTypes()
 	if err != nil {
 		fmt.Println(err)
@@ -146,6 +150,12 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 			for propName, propVal := range dataSource.Options {
 				// does dataSource.Options only have what's in configuration_schema.properties[]?
 				_, exists := dst.ConfigurationSchema.Properties[propName]
+
+				if whitelistedProps[propName] {
+					log.Warn(fmt.Sprintf("[WARN] Whitelisted field (%s)", propName))
+					continue
+				}
+
 				if !exists {
 					if c.IsStrict() {
 						return nil, fmt.Errorf("Invalid field (%s) for type: %s", propName, dataSource.Type)
