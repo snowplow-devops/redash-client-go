@@ -1,3 +1,7 @@
+Version 0.6.0 (2022-09-23)
+--------------------------
+Add GetUsers pagination (#15)
+
 Version 0.5.0 (2022-09-21)
 --------------------------
 Update README badges (#13)
