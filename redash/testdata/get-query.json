@@ -1,0 +1,82 @@
+{
+  "id": 1,
+  "latest_query_data_id": 3919563,
+  "name": "Daily Active Users",
+  "description": "Service X DAU",
+  "query": "SELECT 1 + 1;",
+  "query_hash": "ec2fda0cc5a54b38f81744fcad43ce5a",
+  "schedule": null,
+  "api_key": "ApIkEyApIkEyApIkEyApIkEyApIkEy",
+  "is_archived": false,
+  "is_draft": false,
+  "updated_at": "2021-11-07T22:22:34.929Z",
+  "created_at": "2021-08-13T23:29:12.743Z",
+  "data_source_id": 2,
+  "options": { "parameters": [] },
+  "version": 1,
+  "tags": [],
+  "is_safe": true,
+  "user": {
+    "id": 1,
+    "name": "Admin",
+    "email": "admin@example.com",
+    "profile_image_url": "https://www.gravatar.com/avatar/example",
+    "groups": [2, 1, 3],
+    "updated_at": "2021-11-02T21:17:39.226Z",
+    "created_at": "2021-01-21T10:29:52.872Z",
+    "disabled_at": null,
+    "is_disabled": false,
+    "active_at": null,
+    "is_invitation_pending": false,
+    "is_email_verified": true,
+    "auth_type": "password"
+  },
+  "last_modified_by": {
+    "id": 2,
+    "name": "Developer",
+    "email": "developer@example.com",
+    "profile_image_url": "https://www.gravatar.com/avatar/example",
+    "groups": [2, 4, 4, 1],
+    "updated_at": "2021-11-16T23:34:36.829Z",
+    "created_at": "2021-03-13T23:46:09.191Z",
+    "disabled_at": null,
+    "is_disabled": false,
+    "active_at": "2021-11-02T08:09:03Z",
+    "is_invitation_pending": false,
+    "is_email_verified": true,
+    "auth_type": "password"
+  },
+  "visualizations": [
+    {
+      "id": 1,
+      "type": "TABLE",
+      "name": "Table",
+      "description": "",
+      "options": {},
+      "updated_at": "2021-03-13T23:29:12.747Z",
+      "created_at": "2021-03-13T23:29:12.747Z"
+    },
+    {
+      "id": 2,
+      "type": "CHART",
+      "name": "DAU",
+      "description": "",
+      "options": {
+        "yAxis": [{ "type": "linear" }, { "type": "linear", "opposite": true }],
+        "series": { "stacking": null },
+        "globalSeriesType": "line",
+        "sortX": true,
+        "seriesOptions": {
+          "DAU": { "zIndex": 0, "index": 0, "type": "line", "yAxis": 0 }
+        },
+        "xAxis": { "labels": { "enabled": true }, "type": "datetime" },
+        "columnMapping": { "Date": "x", "DAU": "y" },
+        "legend": { "enabled": true }
+      },
+      "updated_at": "2021-03-13T23:30:07.968Z",
+      "created_at": "2021-03-13T23:30:07.968Z"
+    }
+  ],
+  "is_favorite": false,
+  "can_edit": false
+}
