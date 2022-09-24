@@ -1,3 +1,15 @@
+Version 0.6.0 (2022-09-23)
+--------------------------
+Add GetUsers pagination (#15)
+
+Version 0.5.0 (2022-09-21)
+--------------------------
+Update README badges (#13)
+Add query to doRequest (#7)
+Update copyright to 2020-2022 (#11)
+Bump Go Version to 1.17 (#12)
+Implement SSH Tunnel support (#14)
+
 Version 0.4.2 (2020-09-23)
 --------------------------
 Run CI on all branches (#4)

@@ -14,12 +14,12 @@ In your go files, simply use:
 import "github.com/snowplow-devops/redash-client-go/redash"
 ```
 
-Then next `go mod tidy` or `go test` invocation will automatically
-populate your `go.mod` with the last redash-client-go release, now
-[![Version](https://img.shields.io/github/tag/snowplow-devops/redash-client-go.svg)](https://github.com/snowplow-devops/redash-client-go/releases).
-(Note you can use `go mod vendor` to vendor your dependencies.)
+Then next `go mod tidy` or `go test` invocation will automatically populate your `go.mod` with the last redash-client-go release, now [![Version](https://img.shields.io/github/tag/snowplow-devops/redash-client-go.svg)](https://github.com/snowplow-devops/redash-client-go/releases).
+
+_Note_: you can use `go mod vendor` to vendor your dependencies.
 
 From there, you will need to setup a new client in order to access API methods:
+
 ```
 config := redash.Config{
   RedashURI: "https://acme.com/",
@@ -35,7 +35,7 @@ if err != nil {
 
 ## Usage ##
 
-Functional examples can be found in
+Functional examples can be found in:
 * https://github.com/snowplow-devops/redash-client-go/tree/master/examples 
 
 ## Development ##
@@ -66,7 +66,7 @@ $ make format
 
 ### Copyright and license
 
-The Redash Go Client is copyright 2019-2020 Snowplow Analytics Ltd.
+The Redash Go Client is copyright 2019-2022 Snowplow Analytics Ltd.
 
 Licensed under the **[Apache License, Version 2.0][license]** (the "License");
 you may not use this software except in compliance with the License.
