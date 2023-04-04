@@ -77,7 +77,7 @@ type UserUpdatePayload struct {
 	Groups []int  `json:"group_ids"`
 }
 
-//GetUsers returns a paginated list of users
+// GetUsers returns a paginated list of users
 func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	path := "/api/users"
 
@@ -102,7 +102,7 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	return &users, nil
 }
 
-//GetUser gets a specific User
+// GetUser gets a specific User
 func (c *Client) GetUser(id int) (*User, error) {
 	path := "/api/users/" + strconv.Itoa(id)
 
@@ -190,7 +190,7 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 	return &user, nil
 }
 
-//DisableUser disables an active user.
+// DisableUser disables an active user.
 func (c *Client) DisableUser(id int) error {
 	path := "/api/users/" + strconv.Itoa(id) + "/disable"
 
@@ -209,7 +209,7 @@ func (c *Client) DisableUser(id int) error {
 	return nil
 }
 
-//SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
+// SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
 func (c *Client) SearchUsers(term string) (*UserList, error) {
 	path := "/api/users"
 
