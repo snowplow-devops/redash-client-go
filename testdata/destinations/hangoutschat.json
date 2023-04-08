@@ -3,24 +3,8 @@
   "name": "Test Google Hangouts Chat",
   "type": "hangouts_chat",
   "icon": "fa-bolt",
-  "configuration_schema": {
-    "type": "object",
-    "properties": {
-      "url": {
-        "type": "string",
-        "title": "Webhook URL (get it from the room settings)"
-      },
-      "icon_url": {
-        "type": "string",
-        "title": "Icon URL (32x32 or multiple, png format)"
-      }
-    },
-    "secret": [
-      "url"
-    ],
-    "required": [
-      "url"
-    ]
+  "options": {
+    "url": "https://mail.google.com/chat/u/0/#chat/test"
   }
 }
 

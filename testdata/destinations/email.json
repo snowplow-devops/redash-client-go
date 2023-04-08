@@ -3,23 +3,7 @@
   "name": "Test Email",
   "type": "email",
   "icon": "fa-envelope",
-  "configuration_schema": {
-    "type": "object",
-    "properties": {
-      "addresses": {
-        "type": "string"
-      },
-      "subject_template": {
-        "type": "string",
-        "default": "({state}) {alert_name}",
-        "title": "Subject Template"
-      }
-    },
-    "required": [
-      "addresses"
-    ],
-    "extra_options": [
-      "subject_template"
-    ]
+  "options": {
+    "addresses": "string"
   }
 }

@@ -3,26 +3,9 @@
   "name": "Test Mattermost",
   "type": "mattermost",
   "icon": "fa-bolt",
-  "configuration_schema": {
-    "type": "object",
-    "properties": {
-      "url": {
-        "type": "string",
-        "title": "Mattermost Webhook URL"
-      },
-      "username": {
-        "type": "string",
-        "title": "Username"
-      },
-      "icon_url": {
-        "type": "string",
-        "title": "Icon (URL)"
-      },
-      "channel": {
-        "type": "string",
-        "title": "Channel"
-      }
-    },
-    "secret": "url"
+  "options": {
+    "url": "https://example.com/company/mattermost"
+    "username": "Redash"
+    "channel": "#redash"
   }
 }

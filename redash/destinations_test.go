@@ -36,6 +36,44 @@ func loadFixture(filePath string) string {
 	return string(content)
 }
 
+func TestGetDestinations(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/destinations.json")
+
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations", httpmock.NewStringResponder(200, payload))
+
+	resp, err := c.GetDestinations()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	assert.Len(*resp, 8)
+}
+
+func TestGetDestinationTypes(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/types.json")
+
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/types", httpmock.NewStringResponder(200, payload))
+
+	resp, err := c.GetDestinationTypes()
+	if err != nil {
+		panic(err.Error())
+	}
+
+	assert.Len(*resp, 8)
+}
+
 func TestGetEmailDestination(t *testing.T) {
 	tests := struct {
 		name    string
@@ -136,32 +174,6 @@ func TestGetHangoutsChatDestination(t *testing.T) {
 		panic(err.Error())
 	}
 	destination := resp.(*HangoutsChatDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
-}
-
-func TestGetHipChatDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test HipChat",
-		loadFixture("../testdata/destinations/hipchat.json"),
-	}
-
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
-	if err != nil {
-		panic(err.Error())
-	}
-	destination := resp.(*HipChatDestination)
 	assert.Equal(1, destination.ID)
 	assert.Equal(tests.name, destination.Name)
 }

@@ -3,30 +3,8 @@
   "name": "Test ChatWork",
   "type": "chatwork",
   "icon": "fa-comment",
-  "configuration_schema": {
-    "type": "object",
-    "properties": {
-      "api_token": {
-        "type": "string",
-        "title": "API Token"
-      },
-      "room_id": {
-        "type": "string",
-        "title": "Room ID"
-      },
-      "message_template": {
-        "type": "string",
-        "default": "{alert_name} changed state to {new_state}.\\n{alert_url}\\n{query_url}",
-        "title": "Message Template"
-      }
-    },
-    "secret": [
-      "api_token"
-    ],
-    "required": [
-      "message_template",
-      "api_token",
-      "room_id"
-    ]
+  "options": {
+    "api_token": "token",
+    "room_id": "123",
   }
 }

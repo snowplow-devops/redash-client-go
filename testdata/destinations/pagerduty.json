@@ -2,24 +2,7 @@
   "id": 1,
   "name": "Test PagerDuty",
   "type": "pagerduty",
-  "icon": "creative-commons-pd-alt",
-  "configuration_schema": {
-    "type": "object",
-    "properties": {
-      "integration_key": {
-        "type": "string",
-        "title": "PagerDuty Service Integration Key"
-      },
-      "description": {
-        "type": "string",
-        "title": "Description for the event, defaults to alert name"
-      }
-    },
-    "secret": [
-      "integration_key"
-    ],
-    "required": [
-      "integration_key"
-    ]
+  "properties": {
+    "integration_key": "testkey"
   }
 }

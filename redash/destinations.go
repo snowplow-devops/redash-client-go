@@ -19,32 +19,29 @@ import (
 	"io/ioutil"
 	"net/url"
 	"strconv"
-	// log "github.com/sirupsen/logrus"
+
+	log "github.com/sirupsen/logrus"
 )
 
+// ParseDestinationType parses payload and extracts into a suitable type
 func ParseDestinationType(payload []byte) (destination interface{}, err error) {
 	dst := &Destination{}
 	err = json.Unmarshal(payload, dst)
 	if err != nil {
 		return nil, err
 	}
-	switch dst.Type {
-	case "email":
-		destination = &EmailDestination{}
-	case "slack":
-		destination = &SlackDestination{}
-	case "webhook":
-		destination = &WebhookDestination{}
-	case "hipchat":
-		destination = &HipChatDestination{}
-	case "mattermost":
-		destination = &MattermostDestination{}
-	case "chatwork":
-		destination = &ChatWorkDestination{}
-	case "pagerduty":
-		destination = &PagerDutyDestination{}
-	case "hangouts_chat":
-		destination = &HangoutsChatDestination{}
+	dstTypes := map[string]interface{}{
+		"email":         &EmailDestination{},
+		"slack":         &SlackDestination{},
+		"webhook":       &WebhookDestination{},
+		"mattermost":    &MattermostDestination{},
+		"chatwork":      &ChatWorkDestination{},
+		"pagerduty":     &PagerDutyDestination{},
+		"hangouts_chat": &HangoutsChatDestination{},
+	}
+	destination, ok := dstTypes[dst.Type]
+	if !ok {
+		log.Errorf("Invalid destination %s", dst.Type)
 	}
 	err = json.Unmarshal(payload, destination)
 	if err != nil {
@@ -99,7 +96,7 @@ func (c *Client) GetDestination(id int) (destination interface{}, err error) {
 }
 
 // GetDestinationTypes gets all available types with configuration details
-func (c *Client) GetDestinationTypes() (*[]DestinationTypes, error) {
+func (c *Client) GetDestinationTypes() (*[]DestinationCommon, error) {
 	path := "/api/destinations/types"
 	query := url.Values{}
 	response, err := c.get(path, query)
@@ -109,7 +106,7 @@ func (c *Client) GetDestinationTypes() (*[]DestinationTypes, error) {
 	defer response.Body.Close()
 	body, _ := ioutil.ReadAll(response.Body)
 
-	destinationTypes := []DestinationTypes{}
+	destinationTypes := []DestinationCommon{}
 	err = json.Unmarshal(body, &destinationTypes)
 	if err != nil {
 		return nil, err
