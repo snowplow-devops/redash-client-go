@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "name": "Test HipChat",
+  "type": "hipchat",
+  "icon": "fa-comment-o",
+  "configuration_schema": {
+    "type": "object",
+    "properties": {
+      "url": {
+        "type": "string",
+        "title": "HipChat Notification URL (get it from the Integrations page)"
+      }
+    },
+    "secret": [
+      "url"
+    ],
+    "required": [
+      "url"
+    ]
+  },
+  "deprecated": true
+}

@@ -1,0 +1,212 @@
+[
+  {
+    "name": "Email",
+    "type": "email",
+    "icon": "fa-envelope",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "addresses": {
+          "type": "string"
+        },
+        "subject_template": {
+          "type": "string",
+          "default": "({state}) {alert_name}",
+          "title": "Subject Template"
+        }
+      },
+      "required": [
+        "addresses"
+      ],
+      "extra_options": [
+        "subject_template"
+      ]
+    }
+  },
+  {
+    "name": "Slack",
+    "type": "slack",
+    "icon": "fa-slack",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "Slack Webhook URL"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username"
+        },
+        "icon_emoji": {
+          "type": "string",
+          "title": "Icon (Emoji)"
+        },
+        "icon_url": {
+          "type": "string",
+          "title": "Icon (URL)"
+        },
+        "channel": {
+          "type": "string",
+          "title": "Channel"
+        }
+      },
+      "secret": [
+        "url"
+      ]
+    }
+  },
+  {
+    "name": "Webhook",
+    "type": "webhook",
+    "icon": "fa-bolt",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "secret": [
+        "password",
+        "url"
+      ]
+    }
+  },
+  {
+    "name": "HipChat",
+    "type": "hipchat",
+    "icon": "fa-comment-o",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "HipChat Notification URL (get it from the Integrations page)"
+        }
+      },
+      "secret": [
+        "url"
+      ],
+      "required": [
+        "url"
+      ]
+    },
+    "deprecated": true
+  },
+  {
+    "name": "Mattermost",
+    "type": "mattermost",
+    "icon": "fa-bolt",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "Mattermost Webhook URL"
+        },
+        "username": {
+          "type": "string",
+          "title": "Username"
+        },
+        "icon_url": {
+          "type": "string",
+          "title": "Icon (URL)"
+        },
+        "channel": {
+          "type": "string",
+          "title": "Channel"
+        }
+      },
+      "secret": "url"
+    }
+  },
+  {
+    "name": "ChatWork",
+    "type": "chatwork",
+    "icon": "fa-comment",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "api_token": {
+          "type": "string",
+          "title": "API Token"
+        },
+        "room_id": {
+          "type": "string",
+          "title": "Room ID"
+        },
+        "message_template": {
+          "type": "string",
+          "default": "{alert_name} changed state to {new_state}.\\n{alert_url}\\n{query_url}",
+          "title": "Message Template"
+        }
+      },
+      "secret": [
+        "api_token"
+      ],
+      "required": [
+        "message_template",
+        "api_token",
+        "room_id"
+      ]
+    }
+  },
+  {
+    "name": "PagerDuty",
+    "type": "pagerduty",
+    "icon": "creative-commons-pd-alt",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "integration_key": {
+          "type": "string",
+          "title": "PagerDuty Service Integration Key"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description for the event, defaults to alert name"
+        }
+      },
+      "secret": [
+        "integration_key"
+      ],
+      "required": [
+        "integration_key"
+      ]
+    }
+  },
+  {
+    "name": "Google Hangouts Chat",
+    "type": "hangouts_chat",
+    "icon": "fa-bolt",
+    "configuration_schema": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "Webhook URL (get it from the room settings)"
+        },
+        "icon_url": {
+          "type": "string",
+          "title": "Icon URL (32x32 or multiple, png format)"
+        }
+      },
+      "secret": [
+        "url"
+      ],
+      "required": [
+        "url"
+      ]
+    }
+  }
+]
