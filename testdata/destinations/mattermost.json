@@ -4,8 +4,8 @@
   "type": "mattermost",
   "icon": "fa-bolt",
   "options": {
-    "url": "https://example.com/company/mattermost"
-    "username": "Redash"
+    "url": "https://example.com/company/mattermost",
+    "username": "Redash",
     "channel": "#redash"
   }
 }

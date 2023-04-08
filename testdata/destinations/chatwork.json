@@ -5,6 +5,6 @@
   "icon": "fa-comment",
   "options": {
     "api_token": "token",
-    "room_id": "123",
+    "room_id": "123"
   }
 }
