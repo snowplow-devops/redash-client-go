@@ -4,6 +4,6 @@
   "type": "email",
   "icon": "fa-envelope",
   "options": {
-    "addresses": "string"
+    "addresses": "test@mail.com"
   }
 }

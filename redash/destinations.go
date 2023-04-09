@@ -116,10 +116,10 @@ func (c *Client) GetDestinationTypes() (*[]DestinationCommon, error) {
 }
 
 // CreateDestination creates a new Destination
-func (c *Client) CreateDestination(payload []byte) (destination interface{}, err error) {
+func (c *Client) CreateDestination(payload []byte) (*DestinationCommon, error) {
 	path := "/api/destinations"
 
-	_, err = ParseDestinationType(payload)
+	_, err := ParseDestinationType(payload)
 	if err != nil {
 		return nil, err
 	}
@@ -136,8 +136,7 @@ func (c *Client) CreateDestination(payload []byte) (destination interface{}, err
 		return nil, err
 	}
 
-	destination = Destination{}
-
+	destination := DestinationCommon{}
 	err = json.Unmarshal(body, &destination)
 	if err != nil {
 		return nil, err
@@ -147,7 +146,7 @@ func (c *Client) CreateDestination(payload []byte) (destination interface{}, err
 }
 
 // UpdateDestination Updates an existing Destination
-func (c *Client) UpdateDestination(id int, payload []byte) (resp interface{}, err error) {
+func (c *Client) UpdateDestination(id int, payload []byte) (*DestinationCommon, error) {
 	path := "/api/destinations/" + strconv.Itoa(id)
 
 	destination, err := ParseDestinationType(payload)
@@ -167,12 +166,13 @@ func (c *Client) UpdateDestination(id int, payload []byte) (resp interface{}, er
 		return nil, err
 	}
 
-	resp, err = ParseDestinationType(body)
+	resultDestination := DestinationCommon{}
+	err = json.Unmarshal(body, &resultDestination)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resp, nil
+	return &resultDestination, nil
 }
 
 // DeleteDestination deletes a specific Destination

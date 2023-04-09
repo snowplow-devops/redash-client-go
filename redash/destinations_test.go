@@ -74,184 +74,171 @@ func TestGetDestinationTypes(t *testing.T) {
 	assert.Len(*resp, 8)
 }
 
-func TestGetEmailDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
+func TestDestination(t *testing.T) {
+	test := struct {
+		name            string
+		requestPayload  string
+		responsePayload string
 	}{
 		"Test Email",
+		loadFixture("../testdata/destinations/request_email.json"),
 		loadFixture("../testdata/destinations/email.json"),
 	}
+	t.Run("Create", func(t *testing.T) {
+		assert := assert.New(t)
+		httpmock.Activate()
+		defer httpmock.DeactivateAndReset()
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
+		c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
 
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+		httpmock.RegisterResponder("POST", "https://com.acme/api/destinations", httpmock.NewStringResponder(200, test.responsePayload))
 
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
+		resp, err := c.CreateDestination([]byte(test.requestPayload))
+		if err != nil {
+			panic(err.Error())
+		}
+		assert.Equal(1, resp.ID)
+		assert.Equal(test.name, resp.Name)
+	})
+	t.Run("Update", func(t *testing.T) {
+		assert := assert.New(t)
+		httpmock.Activate()
+		defer httpmock.DeactivateAndReset()
 
-	resp, err := c.GetDestination(1)
-	if err != nil {
-		panic(err.Error())
-	}
-	destination := resp.(*EmailDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+		c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+		httpmock.RegisterResponder("POST", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, test.responsePayload))
+
+		resp, err := c.UpdateDestination(1, []byte(test.requestPayload))
+		if err != nil {
+			panic(err.Error())
+		}
+		log.Errorf("Payload: %T", resp)
+		assert.Equal(1, resp.ID)
+		assert.Equal(test.name, resp.Name)
+	})
+	t.Run("Get", func(t *testing.T) {
+		assert := assert.New(t)
+		httpmock.Activate()
+		defer httpmock.DeactivateAndReset()
+
+		c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+		httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, test.responsePayload))
+
+		resp, err := c.GetDestination(1)
+		if err != nil {
+			panic(err.Error())
+		}
+		destination, ok := resp.(*EmailDestination)
+		if !ok {
+			t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		}
+		assert.Equal(1, destination.ID)
+		assert.Equal(test.name, destination.Name)
+	})
+	t.Run("Delete", func(t *testing.T) {
+		httpmock.Activate()
+		defer httpmock.DeactivateAndReset()
+
+		c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+		httpmock.RegisterResponder("DELETE", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(204, "NO CONTENT"))
+
+		err := c.DeleteDestination(1)
+		if err != nil {
+			panic(err.Error())
+		}
+	})
 }
 
-func TestGetSlackDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test Slack",
-		loadFixture("../testdata/destinations/slack.json"),
-	}
+func TestGetEmailDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/email.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*SlackDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*EmailDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }
 
-func TestGetChatWorkDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test ChatWork",
-		loadFixture("../testdata/destinations/chatwork.json"),
-	}
+func TestParseSlackDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/slack.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*ChatWorkDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*SlackDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }
 
-func TestGetHangoutsChatDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test Google Hangouts Chat",
-		loadFixture("../testdata/destinations/hangoutschat.json"),
-	}
+func TestParseChatWorkDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/chatwork.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*HangoutsChatDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*ChatWorkDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }
 
-func TestGetMattermostDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test Mattermost",
-		loadFixture("../testdata/destinations/mattermost.json"),
-	}
+func TestParseHangoutsChatDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/hangoutschat.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*MattermostDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*HangoutsChatDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }
 
-func TestGetWebhookDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test Webhook",
-		loadFixture("../testdata/destinations/webhook.json"),
-	}
+func TestParseMattermostDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/mattermost.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*WebhookDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*MattermostDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }
 
-func TestGetPagerDutyDestination(t *testing.T) {
-	tests := struct {
-		name    string
-		payload string
-	}{
-		"Test PagerDuty",
-		loadFixture("../testdata/destinations/pagerduty.json"),
-	}
+func TestParseWebhookDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/webhook.json")
 
-	assert := assert.New(t)
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-
-	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
-
-	httpmock.RegisterResponder("GET", "https://com.acme/api/destinations/1", httpmock.NewStringResponder(200, tests.payload))
-
-	resp, err := c.GetDestination(1)
+	result, err := ParseDestinationType([]byte(payload))
 	if err != nil {
 		panic(err.Error())
 	}
-	destination := resp.(*PagerDutyDestination)
-	assert.Equal(1, destination.ID)
-	assert.Equal(tests.name, destination.Name)
+	destination, ok := result.(*WebhookDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
+}
+
+func TestParsePagerDutyDestination(t *testing.T) {
+	payload := loadFixture("../testdata/destinations/pagerduty.json")
+
+	result, err := ParseDestinationType([]byte(payload))
+	if err != nil {
+		panic(err.Error())
+	}
+	destination, ok := result.(*PagerDutyDestination)
+	if !ok {
+		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+	}
 }

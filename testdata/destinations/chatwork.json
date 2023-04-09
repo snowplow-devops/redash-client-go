@@ -4,7 +4,7 @@
   "type": "chatwork",
   "icon": "fa-comment",
   "options": {
-    "api_token": "token",
+    "api_token": "--------",
     "room_id": "123"
   }
 }

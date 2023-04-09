@@ -3,6 +3,6 @@
   "name": "Test PagerDuty",
   "type": "pagerduty",
   "properties": {
-    "integration_key": "testkey"
+    "integration_key": "--------"
   }
 }

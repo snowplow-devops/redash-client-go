@@ -3,8 +3,8 @@
   "name": "Test Webhook",
   "type": "webhook",
   "options": {
-    "url": "https://example.com",
+    "url": "--------",
     "username": "redash",
-    "password": "redash"
+    "password": "--------"
   }
 }

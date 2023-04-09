@@ -3,7 +3,7 @@
   "name": "Test Slack",
   "type": "slack",
   "options": {
-    "url": "http://slack.com/hook",
+    "url": "--------",
     "username": "Redash",
     "channel": "#redash"
   }
