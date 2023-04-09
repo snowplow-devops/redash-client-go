@@ -17,15 +17,10 @@ import (
 	"github.com/jarcoal/httpmock"
 	log "github.com/sirupsen/logrus"
 	"os"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func isType(a, b interface{}) bool {
-	return reflect.TypeOf(a) == reflect.TypeOf(b)
-}
 
 func loadFixture(filePath string) string {
 	content, err := os.ReadFile(filePath)
