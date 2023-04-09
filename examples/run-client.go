@@ -161,4 +161,43 @@ func main() {
 		return
 	}
 
+	// --- Alert destination interactions
+	// Create a new alert destination
+	destinationPayload := []byte(`{"name: "Slack", "type": "slack"}`)
+	newDestination, err := c.CreateDestination(destinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Desitnation %#v created", newDestination.Name)
+
+	// Get the destination
+	getDestinationResponse, err := c.GetDestination(newDestination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	destination, ok := getDestinationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation is %#v", destination.Name)
+
+	// Update the destination
+	updateDestinationPayload := []byte(`{"name: "Slack", "type": "slack", "options": {"url": "test.slack.com/hook"}}`)
+	updateDestionationResponse, err := c.UpdateDestination(newDestination.ID, updateDestinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation %#v updated", updateDestionationResponse.Name)
+
+	// Delete the destionation
+	err = c.DeleteDestination(newDestination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation %#v deleted", destination.Name)
 }
