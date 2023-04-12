@@ -163,7 +163,7 @@ func main() {
 
 	// --- Alert destination interactions
 	// Create a new alert destination
-	destinationPayload := []byte(`{"name: "Slack", "type": "slack"}`)
+	destinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {}}`)
 	newDestination, err := c.CreateDestination(destinationPayload)
 	if err != nil {
 		log.Fatal(err)
@@ -185,7 +185,7 @@ func main() {
 	fmt.Printf("The desitnation is %#v", destination.Name)
 
 	// Update the destination
-	updateDestinationPayload := []byte(`{"name: "Slack", "type": "slack", "options": {"url": "test.slack.com/hook"}}`)
+	updateDestinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {"url": "https://test.slack.com/hook"}}`)
 	updateDestionationResponse, err := c.UpdateDestination(newDestination.ID, updateDestinationPayload)
 	if err != nil {
 		log.Fatal(err)

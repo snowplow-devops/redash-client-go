@@ -15,7 +15,6 @@ package redash
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/url"
 	"strconv"
@@ -149,13 +148,13 @@ func (c *Client) CreateDestination(payload []byte) (*DestinationCommon, error) {
 func (c *Client) UpdateDestination(id int, payload []byte) (*DestinationCommon, error) {
 	path := "/api/destinations/" + strconv.Itoa(id)
 
-	destination, err := ParseDestinationType(payload)
+	_, err := ParseDestinationType(payload)
 	if err != nil {
 		return nil, err
 	}
 
 	query := url.Values{}
-	response, err := c.post(path, fmt.Sprint(&destination), query)
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -166,13 +165,13 @@ func (c *Client) UpdateDestination(id int, payload []byte) (*DestinationCommon, 
 		return nil, err
 	}
 
-	resultDestination := DestinationCommon{}
-	err = json.Unmarshal(body, &resultDestination)
+	destination := DestinationCommon{}
+	err = json.Unmarshal(body, &destination)
 	if err != nil {
 		return nil, err
 	}
 
-	return &resultDestination, nil
+	return &destination, nil
 }
 
 // DeleteDestination deletes a specific Destination
