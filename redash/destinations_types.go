@@ -40,14 +40,13 @@ type EmailDestination struct {
 // SlackDestination represents a slack alert destination
 type SlackDestination struct {
 	Destination
-	*SlackOptions `json:"options"`
-}
-type SlackOptions struct {
-	URL       string `json:"url,omitempty"`
-	Username  string `json:"username,omitempty"`
-	IconEmoji string `json:"icon_emoji,omitempty"`
-	IconURL   string `json:"icon_url,omitempty"`
-	Channel   string `json:"channel,omitempty"`
+	SlackOptions struct {
+		URL       string `json:"url,omitempty"`
+		Username  string `json:"username,omitempty"`
+		IconEmoji string `json:"icon_emoji,omitempty"`
+		IconURL   string `json:"icon_url,omitempty"`
+		Channel   string `json:"channel,omitempty"`
+	} `json:"options"`
 }
 
 // WebhookDestination represents a webhook alert destination
