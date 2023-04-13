@@ -2,7 +2,7 @@
   "id": 1,
   "name": "Test PagerDuty",
   "type": "pagerduty",
-  "properties": {
+  "options": {
     "integration_key": "--------"
   }
 }

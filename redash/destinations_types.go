@@ -13,16 +13,17 @@
 
 package redash
 
-// Destination represents Base structure of alert destination
+// Destination represents base structure of alert destination
 type Destination struct {
-	ID   int    `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
-	Type string `json:"type,omitempty"`
-	Icon string `json:"icon,omitempty"`
+	ID      int         `json:"id,omitempty"`
+	Name    string      `json:"name"`
+	Type    string      `json:"type"`
+	Icon    string      `json:"icon,omitempty"`
+	Options interface{} `json:"options,omitempty"`
 }
 
-// DestinationCommon represents common alert destination stucture
-type DestinationCommon struct {
+// DestinationTypes represents common alert destination stucture
+type DestinationTypes struct {
 	Destination
 	ConfigurationSchema interface{} `json:"configuration_schema"`
 }
@@ -39,13 +40,14 @@ type EmailDestination struct {
 // SlackDestination represents a slack alert destination
 type SlackDestination struct {
 	Destination
-	Options struct {
-		URL       string `json:"url,omitempty"`
-		Username  string `json:"username,omitempty"`
-		IconEmoji string `json:"icon_emoji,omitempty"`
-		IconURL   string `json:"icon_url,omitempty"`
-		Channel   string `json:"channel,omitempty"`
-	} `json:"options,omitempty"`
+	*SlackOptions `json:"options"`
+}
+type SlackOptions struct {
+	URL       string `json:"url,omitempty"`
+	Username  string `json:"username,omitempty"`
+	IconEmoji string `json:"icon_emoji,omitempty"`
+	IconURL   string `json:"icon_url,omitempty"`
+	Channel   string `json:"channel,omitempty"`
 }
 
 // WebhookDestination represents a webhook alert destination
@@ -55,7 +57,7 @@ type WebhookDestination struct {
 		URL      string `json:"url"`
 		Username string `json:"username,omitempty"`
 		Password string `json:"password,omitempty"`
-	} `json:"options,omitempty"`
+	} `json:"options"`
 }
 
 // MattermostDestination represents a Mattermost alert destination
@@ -66,7 +68,7 @@ type MattermostDestination struct {
 		Username string `json:"username,omitempty"`
 		IconURL  string `json:"icon_url,omitempty"`
 		Channel  string `json:"channel,omitempty"`
-	} `json:"options,omitempty"`
+	} `json:"options"`
 }
 
 // ChatWorkDestination represents a ChatWork alert destination

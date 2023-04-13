@@ -15,6 +15,7 @@ package redash
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"net/url"
 	"strconv"
@@ -28,6 +29,9 @@ func ParseDestinationType(payload []byte) (destination interface{}, err error) {
 	err = json.Unmarshal(payload, dst)
 	if err != nil {
 		return nil, err
+	}
+	if dst.Options == nil {
+		return nil, errors.New("empty options field")
 	}
 	dstTypes := map[string]interface{}{
 		"email":         &EmailDestination{},
@@ -46,7 +50,6 @@ func ParseDestinationType(payload []byte) (destination interface{}, err error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return destination, nil
 }
 
@@ -72,10 +75,58 @@ func (c *Client) GetDestinations() (*[]Destination, error) {
 }
 
 // GetDestination gets a specific Destination
-func (c *Client) GetDestination(id int) (destination interface{}, err error) {
+func (c *Client) GetDestination(id int) (interface{}, error) {
 	path := "/api/destinations/" + strconv.Itoa(id)
 	query := url.Values{}
 	response, err := c.get(path, query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	destination, err := ParseDestinationType(body)
+	if err != nil {
+		return nil, err
+	}
+
+	return destination, nil
+}
+
+// GetDestinationTypes gets all available types with configuration details
+func (c *Client) GetDestinationTypes() (destinationTypes *[]DestinationTypes, err error) {
+	path := "/api/destinations/types"
+	query := url.Values{}
+	response, err := c.get(path, query)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+	body, _ := ioutil.ReadAll(response.Body)
+
+	err = json.Unmarshal(body, &destinationTypes)
+	if err != nil {
+		return nil, err
+	}
+
+	return destinationTypes, nil
+}
+
+// CreateDestination creates a new Destination
+func (c *Client) CreateDestination(payload []byte) (destination interface{}, err error) {
+	path := "/api/destinations"
+
+	_, err = ParseDestinationType(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	query := url.Values{}
+	response, err := c.post(path, string(payload), query)
 	if err != nil {
 		return nil, err
 	}
@@ -94,61 +145,11 @@ func (c *Client) GetDestination(id int) (destination interface{}, err error) {
 	return destination, nil
 }
 
-// GetDestinationTypes gets all available types with configuration details
-func (c *Client) GetDestinationTypes() (*[]DestinationCommon, error) {
-	path := "/api/destinations/types"
-	query := url.Values{}
-	response, err := c.get(path, query)
-	if err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
-
-	destinationTypes := []DestinationCommon{}
-	err = json.Unmarshal(body, &destinationTypes)
-	if err != nil {
-		return nil, err
-	}
-
-	return &destinationTypes, nil
-}
-
-// CreateDestination creates a new Destination
-func (c *Client) CreateDestination(payload []byte) (*DestinationCommon, error) {
-	path := "/api/destinations"
-
-	_, err := ParseDestinationType(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	query := url.Values{}
-	response, err := c.post(path, string(payload), query)
-	if err != nil {
-		return nil, err
-	}
-
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	destination := DestinationCommon{}
-	err = json.Unmarshal(body, &destination)
-	if err != nil {
-		return nil, err
-	}
-
-	return &destination, nil
-}
-
 // UpdateDestination Updates an existing Destination
-func (c *Client) UpdateDestination(id int, payload []byte) (*DestinationCommon, error) {
+func (c *Client) UpdateDestination(id int, payload []byte) (destination interface{}, err error) {
 	path := "/api/destinations/" + strconv.Itoa(id)
 
-	_, err := ParseDestinationType(payload)
+	_, err = ParseDestinationType(payload)
 	if err != nil {
 		return nil, err
 	}
@@ -165,13 +166,12 @@ func (c *Client) UpdateDestination(id int, payload []byte) (*DestinationCommon, 
 		return nil, err
 	}
 
-	destination := DestinationCommon{}
-	err = json.Unmarshal(body, &destination)
+	destination, err = ParseDestinationType(body)
 	if err != nil {
 		return nil, err
 	}
 
-	return &destination, nil
+	return destination, nil
 }
 
 // DeleteDestination deletes a specific Destination

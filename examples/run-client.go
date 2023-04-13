@@ -169,15 +169,20 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("Desitnation %#v created", newDestination.Name)
+	destination, ok := newDestination.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Desitnation %#v created", destination.Name)
 
 	// Get the destination
-	getDestinationResponse, err := c.GetDestination(newDestination.ID)
+	getDestinationResponse, err := c.GetDestination(destination.ID)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	destination, ok := getDestinationResponse.(*redash.SlackDestination)
+	destination, ok = getDestinationResponse.(*redash.SlackDestination)
 	if !ok {
 		log.Fatal(err)
 		return
@@ -186,15 +191,21 @@ func main() {
 
 	// Update the destination
 	updateDestinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {"url": "https://test.slack.com/hook"}}`)
-	updateDestionationResponse, err := c.UpdateDestination(newDestination.ID, updateDestinationPayload)
+	updateDestionationResponse, err := c.UpdateDestination(destination.ID, updateDestinationPayload)
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("The desitnation %#v updated", updateDestionationResponse.Name)
+
+	destination, ok = updateDestionationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation %#v updated", destination.Name)
 
 	// Delete the destionation
-	err = c.DeleteDestination(newDestination.ID)
+	err = c.DeleteDestination(destination.ID)
 	if err != nil {
 		log.Fatal(err)
 		return

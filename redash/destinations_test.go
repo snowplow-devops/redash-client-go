@@ -14,10 +14,11 @@
 package redash
 
 import (
-	"github.com/jarcoal/httpmock"
-	log "github.com/sirupsen/logrus"
 	"os"
 	"testing"
+
+	"github.com/jarcoal/httpmock"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -92,8 +93,12 @@ func TestDestination(t *testing.T) {
 		if err != nil {
 			panic(err.Error())
 		}
-		assert.Equal(1, resp.ID)
-		assert.Equal(test.name, resp.Name)
+		destination, ok := resp.(*EmailDestination)
+		if !ok {
+			t.Errorf("Expected EmailDestination, but parsing produced %T", destination)
+		}
+		assert.Equal(1, destination.ID)
+		assert.Equal(test.name, destination.Name)
 	})
 	t.Run("Update", func(t *testing.T) {
 		assert := assert.New(t)
@@ -108,9 +113,12 @@ func TestDestination(t *testing.T) {
 		if err != nil {
 			panic(err.Error())
 		}
-		log.Errorf("Payload: %T", resp)
-		assert.Equal(1, resp.ID)
-		assert.Equal(test.name, resp.Name)
+		destination, ok := resp.(*EmailDestination)
+		if !ok {
+			t.Errorf("Expected EmailDestination, but parsing produced %T", destination)
+		}
+		assert.Equal(1, destination.ID)
+		assert.Equal(test.name, destination.Name)
 	})
 	t.Run("Get", func(t *testing.T) {
 		assert := assert.New(t)
@@ -127,7 +135,7 @@ func TestDestination(t *testing.T) {
 		}
 		destination, ok := resp.(*EmailDestination)
 		if !ok {
-			t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+			t.Errorf("Expected EmailDestination, but parsing produced %T", destination)
 		}
 		assert.Equal(1, destination.ID)
 		assert.Equal(test.name, destination.Name)
@@ -156,7 +164,7 @@ func TestGetEmailDestination(t *testing.T) {
 	}
 	destination, ok := result.(*EmailDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected EmailDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -169,7 +177,7 @@ func TestParseSlackDestination(t *testing.T) {
 	}
 	destination, ok := result.(*SlackDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected SlackDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -182,7 +190,7 @@ func TestParseChatWorkDestination(t *testing.T) {
 	}
 	destination, ok := result.(*ChatWorkDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected ChatWorkDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -195,7 +203,7 @@ func TestParseHangoutsChatDestination(t *testing.T) {
 	}
 	destination, ok := result.(*HangoutsChatDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected HangoutsChatDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -208,7 +216,7 @@ func TestParseMattermostDestination(t *testing.T) {
 	}
 	destination, ok := result.(*MattermostDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected MattermostDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -221,7 +229,7 @@ func TestParseWebhookDestination(t *testing.T) {
 	}
 	destination, ok := result.(*WebhookDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected WebhookDestination, but parsing produced %T", destination)
 	}
 }
 
@@ -234,6 +242,6 @@ func TestParsePagerDutyDestination(t *testing.T) {
 	}
 	destination, ok := result.(*PagerDutyDestination)
 	if !ok {
-		t.Errorf("Expected ProjectSystemHookEvent, but parsing produced %T", destination)
+		t.Errorf("Expected PagerDutyDestination, but parsing produced %T", destination)
 	}
 }
