@@ -105,7 +105,7 @@ func TestGetUserByEmail(t *testing.T) {
 	httpmock.RegisterResponder("GET", "https://com.acme/api/users?q=tëst-not-found@email.com",
 		httpmock.NewStringResponder(200, `{"count": 0, "page": 1, "page_size": 25, "results": []}`))
 
-	user, err = c.GetUserByEmail("tëst-not-found@email.com")
+	_, err = c.GetUserByEmail("tëst-not-found@email.com")
 	assert.NotNil(err)
 }
 

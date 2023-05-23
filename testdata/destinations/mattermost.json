@@ -1,0 +1,11 @@
+{
+  "id": 1,
+  "name": "Test Mattermost",
+  "type": "mattermost",
+  "icon": "fa-bolt",
+  "options": {
+    "url": "--------",
+    "username": "Redash",
+    "channel": "#redash"
+  }
+}

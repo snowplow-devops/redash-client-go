@@ -77,7 +77,7 @@ type UserUpdatePayload struct {
 	Groups []int  `json:"group_ids"`
 }
 
-//GetUsers returns a paginated list of users
+// GetUsers returns a paginated list of users
 func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	path := "/api/users"
 
@@ -85,7 +85,6 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	query.Add("page", strconv.Itoa(page))
 	query.Add("page_size", strconv.Itoa(pageSize))
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -102,7 +101,7 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	return &users, nil
 }
 
-//GetUser gets a specific User
+// GetUser gets a specific User
 func (c *Client) GetUser(id int) (*User, error) {
 	path := "/api/users/" + strconv.Itoa(id)
 
@@ -190,7 +189,7 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 	return &user, nil
 }
 
-//DisableUser disables an active user.
+// DisableUser disables an active user.
 func (c *Client) DisableUser(id int) error {
 	path := "/api/users/" + strconv.Itoa(id) + "/disable"
 
@@ -209,14 +208,13 @@ func (c *Client) DisableUser(id int) error {
 	return nil
 }
 
-//SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
+// SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
 func (c *Client) SearchUsers(term string) (*UserList, error) {
 	path := "/api/users"
 
 	query := url.Values{}
 	query.Add("q", term)
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +233,6 @@ func (c *Client) SearchUsers(term string) (*UserList, error) {
 
 // GetUserByEmail returns a single  user from their email address
 func (c *Client) GetUserByEmail(email string) (*User, error) {
-
 	results, err := c.SearchUsers(email)
 	if err != nil {
 		return nil, err

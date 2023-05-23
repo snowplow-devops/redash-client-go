@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "name": "Test Email",
+    "type": "email",
+    "icon": "fa-envelope"
+  },
+  {
+    "id": 2,
+    "name": "Test Slack",
+    "type": "slack",
+    "icon": "fa-slack"
+  },
+  {
+    "id": 3,
+    "name": "Test Webhook",
+    "type": "webhook",
+    "icon": "fa-bolt"
+  },
+  {
+    "id": 4,
+    "name": "Test HipChat",
+    "type": "hipchat",
+    "icon": "fa-comment-o"
+  },
+  {
+    "id": 5,
+    "name": "Test Mattermost",
+    "type": "mattermost",
+    "icon": "fa-bolt"
+  },
+  {
+    "id": 5,
+    "name": "Test ChatWork",
+    "type": "chatwork",
+    "icon": "fa-comment"
+  },
+  {
+    "id": 6,
+    "name": "Test PagerDuty",
+    "type": "pagerduty",
+    "icon": "creative-commons-pd-alt"
+  },
+  {
+    "id": 7,
+    "name": "Test Google Hangouts Chat",
+    "type": "hangouts_chat",
+    "icon": "fa-bolt"
+  }
+]

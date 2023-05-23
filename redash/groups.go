@@ -51,7 +51,6 @@ func (c *Client) GetGroups() (*[]Group, error) {
 
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}

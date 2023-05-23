@@ -97,10 +97,6 @@ func (c *Client) post(path string, payload string, query url.Values) (*http.Resp
 	return c.doRequest(http.MethodPost, path, payload, query)
 }
 
-func (c *Client) put(path string, payload string, query url.Values) (*http.Response, error) {
-	return c.doRequest(http.MethodPut, path, payload, query)
-}
-
 func (c *Client) delete(path string, query url.Values) (*http.Response, error) {
 	return c.doRequest(http.MethodDelete, path, "", query)
 }

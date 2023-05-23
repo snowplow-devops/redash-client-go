@@ -57,12 +57,11 @@ type DataSourceTypePropertyField struct {
 	Default interface{}
 }
 
-//GetDataSources gets an array of all DataSources available
+// GetDataSources gets an array of all DataSources available
 func (c *Client) GetDataSources() (*[]DataSource, error) {
 	path := "/api/data_sources"
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +77,7 @@ func (c *Client) GetDataSources() (*[]DataSource, error) {
 	return &dataSources, nil
 }
 
-//GetDataSource gets a specific DataSource
+// GetDataSource gets a specific DataSource
 func (c *Client) GetDataSource(id int) (*DataSource, error) {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 	query := url.Values{}
@@ -103,12 +102,11 @@ func (c *Client) GetDataSource(id int) (*DataSource, error) {
 	return &dataSource, nil
 }
 
-//GetDataSourceTypes gets all available types with configuration details
+// GetDataSourceTypes gets all available types with configuration details
 func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 	path := "/api/data_sources/types"
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +188,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 	return dataSource, nil
 }
 
-//CreateDataSource creates a new DataSource
+// CreateDataSource creates a new DataSource
 func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, error) {
 	path := "/api/data_sources"
 
@@ -226,7 +224,7 @@ func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, e
 	return &dataSource, nil
 }
 
-//UpdateDataSource Updates an existing DataSource
+// UpdateDataSource Updates an existing DataSource
 func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataSource, error) {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 
@@ -262,7 +260,7 @@ func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataS
 	return &dataSource, nil
 }
 
-//DeleteDataSource deletes a specific DataSource
+// DeleteDataSource deletes a specific DataSource
 func (c *Client) DeleteDataSource(id int) error {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 

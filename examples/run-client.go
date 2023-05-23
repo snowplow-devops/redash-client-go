@@ -22,7 +22,6 @@ import (
 )
 
 func main() {
-
 	apiKey := os.Getenv("REDASH_API_KEY")
 	hostname := os.Getenv("REDASH_URL")
 
@@ -161,4 +160,54 @@ func main() {
 		return
 	}
 
+	// --- Alert destination interactions
+	// Create a new alert destination
+	destinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {}}`)
+	newDestination, err := c.CreateDestination(destinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	destination, ok := newDestination.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("Desitnation %#v created", destination.Name)
+
+	// Get the destination
+	getDestinationResponse, err := c.GetDestination(destination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	destination, ok = getDestinationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation is %#v", destination.Name)
+
+	// Update the destination
+	updateDestinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {"url": "https://test.slack.com/hook"}}`)
+	updateDestionationResponse, err := c.UpdateDestination(destination.ID, updateDestinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	destination, ok = updateDestionationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation %#v updated", destination.Name)
+
+	// Delete the destionation
+	err = c.DeleteDestination(destination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The desitnation %#v deleted", destination.Name)
 }
