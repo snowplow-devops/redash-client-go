@@ -85,7 +85,6 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	query.Add("page", strconv.Itoa(page))
 	query.Add("page_size", strconv.Itoa(pageSize))
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -216,7 +215,6 @@ func (c *Client) SearchUsers(term string) (*UserList, error) {
 	query := url.Values{}
 	query.Add("q", term)
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -235,7 +233,6 @@ func (c *Client) SearchUsers(term string) (*UserList, error) {
 
 // GetUserByEmail returns a single  user from their email address
 func (c *Client) GetUserByEmail(email string) (*User, error) {
-
 	results, err := c.SearchUsers(email)
 	if err != nil {
 		return nil, err

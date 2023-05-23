@@ -58,7 +58,6 @@ func (c *Client) GetDestinations() (*[]Destination, error) {
 	path := "/api/destinations"
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}

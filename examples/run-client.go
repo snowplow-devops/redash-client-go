@@ -22,7 +22,6 @@ import (
 )
 
 func main() {
-
 	apiKey := os.Getenv("REDASH_API_KEY")
 	hostname := os.Getenv("REDASH_URL")
 
