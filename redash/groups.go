@@ -15,7 +15,7 @@ package redash
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"strconv"
 	"time"
@@ -55,8 +55,8 @@ func (c *Client) GetGroups() (*[]Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, _ := io.ReadAll(response.Body)
 
 	groups := []Group{}
 	err = json.Unmarshal(body, &groups)
@@ -77,8 +77,8 @@ func (c *Client) GetGroup(id int) (*Group, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -108,8 +108,8 @@ func (c *Client) CreateGroup(groupPayload *GroupCreatePayload) (*Group, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -139,8 +139,8 @@ func (c *Client) UpdateGroup(id int, group *Group) (*Group, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func (c *Client) GroupAddUser(groupID int, userID int) error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return nil
 }
@@ -195,7 +195,7 @@ func (c *Client) GroupRemoveUser(groupID int, userID int) error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return nil
 }
@@ -215,7 +215,7 @@ func (c *Client) GroupAddDataSource(groupID int, dataSourceID int) error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return nil
 }
@@ -229,7 +229,7 @@ func (c *Client) GroupRemoveDataSource(groupID int, dataSourceID int) error {
 	if err != nil {
 		return err
 	}
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return nil
 }

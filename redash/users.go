@@ -16,7 +16,7 @@ package redash
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"strconv"
 	"time"
@@ -77,7 +77,7 @@ type UserUpdatePayload struct {
 	Groups []int  `json:"group_ids"`
 }
 
-//GetUsers returns a paginated list of users
+// GetUsers returns a paginated list of users
 func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	path := "/api/users"
 
@@ -89,7 +89,7 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 	if err != nil {
 		return nil, err
 	}
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 
 	users := UserList{}
 	err = json.Unmarshal(body, &users)
@@ -97,12 +97,12 @@ func (c *Client) GetUsers(page, pageSize int) (*UserList, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return &users, nil
 }
 
-//GetUser gets a specific User
+// GetUser gets a specific User
 func (c *Client) GetUser(id int) (*User, error) {
 	path := "/api/users/" + strconv.Itoa(id)
 
@@ -112,8 +112,8 @@ func (c *Client) GetUser(id int) (*User, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -143,8 +143,8 @@ func (c *Client) CreateUser(userCreatePayload *UserCreatePayload) (*User, error)
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -174,8 +174,8 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -190,7 +190,7 @@ func (c *Client) UpdateUser(id int, userUpdatePayload *UserUpdatePayload) (*User
 	return &user, nil
 }
 
-//DisableUser disables an active user.
+// DisableUser disables an active user.
 func (c *Client) DisableUser(id int) error {
 	path := "/api/users/" + strconv.Itoa(id) + "/disable"
 
@@ -200,8 +200,8 @@ func (c *Client) DisableUser(id int) error {
 		return err
 	}
 
-	defer response.Body.Close()
-	_, err = ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	_, err = io.ReadAll(response.Body)
 	if err != nil {
 		return err
 	}
@@ -209,7 +209,7 @@ func (c *Client) DisableUser(id int) error {
 	return nil
 }
 
-//SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
+// SearchUsers finds a list of users matching a string (searches `name` and `email` fields)
 func (c *Client) SearchUsers(term string) (*UserList, error) {
 	path := "/api/users"
 
@@ -220,7 +220,7 @@ func (c *Client) SearchUsers(term string) (*UserList, error) {
 	if err != nil {
 		return nil, err
 	}
-	body, _ := ioutil.ReadAll(response.Body)
+	body, _ := io.ReadAll(response.Body)
 
 	users := UserList{}
 	err = json.Unmarshal(body, &users)
@@ -228,7 +228,7 @@ func (c *Client) SearchUsers(term string) (*UserList, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
+	defer func() { _ = response.Body.Close() }()
 
 	return &users, nil
 }
@@ -247,5 +247,5 @@ func (c *Client) GetUserByEmail(email string) (*User, error) {
 		}
 	}
 
-	return nil, fmt.Errorf("No user found with email address: %s", email)
+	return nil, fmt.Errorf("no user found with email address: %s", email)
 }

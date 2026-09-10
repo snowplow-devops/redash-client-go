@@ -14,8 +14,11 @@
 package redash
 
 import (
+	"net/url"
+	"strings"
 	"testing"
 
+	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -45,4 +48,58 @@ func TestNewClient(t *testing.T) {
 	c, err = NewClient(&Config{RedashURI: "http://valid.url", APIKey: "RanD0mStr1nG"})
 	assert.Nil(err)
 	assert.NotNil(c)
+}
+
+// A non-2xx response's body is often the only clue to what actually went
+// wrong (an HTML error page from a misrouted RedashURI, a JSON error from
+// Redash itself, etc.), so doRequest must include it in the returned error
+// instead of just the bare status code.
+func TestDoRequestNon2xxIncludesResponseBody(t *testing.T) {
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	httpmock.RegisterResponder("GET", "https://com.acme/api/groups",
+		httpmock.NewStringResponder(404, `<html><body>404 Not Found</body></html>`))
+
+	_, err := c.get("/api/groups", url.Values{})
+
+	assert.Error(err)
+	assert.Contains(err.Error(), "404")
+	assert.Contains(err.Error(), "404 Not Found")
+}
+
+func TestDoRequestNon2xxWithEmptyBody(t *testing.T) {
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	httpmock.RegisterResponder("GET", "https://com.acme/api/groups",
+		httpmock.NewStringResponder(404, ""))
+
+	_, err := c.get("/api/groups", url.Values{})
+
+	assert.EqualError(err, "HTTP Response: 404")
+}
+
+func TestDoRequestNon2xxTruncatesLongBody(t *testing.T) {
+	assert := assert.New(t)
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	c, _ := NewClient(&Config{RedashURI: "https://com.acme/", APIKey: "ApIkEyApIkEyApIkEyApIkEyApIkEy"})
+
+	longBody := strings.Repeat("x", maxErrorBodySnippet+100)
+	httpmock.RegisterResponder("GET", "https://com.acme/api/groups",
+		httpmock.NewStringResponder(500, longBody))
+
+	_, err := c.get("/api/groups", url.Values{})
+
+	assert.Error(err)
+	assert.LessOrEqual(len(err.Error()), len("HTTP Response: 500: ")+maxErrorBodySnippet+len("..."))
+	assert.Contains(err.Error(), "...")
 }

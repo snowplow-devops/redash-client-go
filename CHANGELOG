@@ -1,3 +1,10 @@
+Version 0.7.0 (2026-09-10)
+--------------------------
+Surface GetDataSourceTypes errors instead of swallowing them (#23)
+Remove Snyk workflow (#22)
+Bump versions for CVEs (#21)
+Remove go-report (#24)
+
 Version 0.6.0 (2022-09-23)
 --------------------------
 Add GetUsers pagination (#15)

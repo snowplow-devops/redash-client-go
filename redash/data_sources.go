@@ -16,7 +16,7 @@ package redash
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/url"
 	"strconv"
 
@@ -57,7 +57,7 @@ type DataSourceTypePropertyField struct {
 	Default interface{}
 }
 
-//GetDataSources gets an array of all DataSources available
+// GetDataSources gets an array of all DataSources available
 func (c *Client) GetDataSources() (*[]DataSource, error) {
 	path := "/api/data_sources"
 	query := url.Values{}
@@ -66,8 +66,8 @@ func (c *Client) GetDataSources() (*[]DataSource, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, _ := io.ReadAll(response.Body)
 
 	dataSources := []DataSource{}
 	err = json.Unmarshal(body, &dataSources)
@@ -78,7 +78,7 @@ func (c *Client) GetDataSources() (*[]DataSource, error) {
 	return &dataSources, nil
 }
 
-//GetDataSource gets a specific DataSource
+// GetDataSource gets a specific DataSource
 func (c *Client) GetDataSource(id int) (*DataSource, error) {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 	query := url.Values{}
@@ -87,8 +87,8 @@ func (c *Client) GetDataSource(id int) (*DataSource, error) {
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -103,7 +103,7 @@ func (c *Client) GetDataSource(id int) (*DataSource, error) {
 	return &dataSource, nil
 }
 
-//GetDataSourceTypes gets all available types with configuration details
+// GetDataSourceTypes gets all available types with configuration details
 func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 	path := "/api/data_sources/types"
 	query := url.Values{}
@@ -112,8 +112,8 @@ func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer response.Body.Close()
-	body, _ := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, _ := io.ReadAll(response.Body)
 
 	dataSourceTypes := []DataSourceType{}
 	err = json.Unmarshal(body, &dataSourceTypes)
@@ -133,7 +133,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 
 	dataSourceTypes, err := c.GetDataSourceTypes()
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
 	for _, dst := range dataSourceTypes {
@@ -143,7 +143,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 				// does dataSource.Options have everything in configuration_schema.required[] ?
 				_, exists := dataSource.Options[required]
 				if !exists {
-					return nil, fmt.Errorf("Required field missing: " + required)
+					return nil, fmt.Errorf("required field missing: %s", required)
 				}
 			}
 
@@ -158,7 +158,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 
 				if !exists {
 					if c.IsStrict() {
-						return nil, fmt.Errorf("Invalid field (%s) for type: %s", propName, dataSource.Type)
+						return nil, fmt.Errorf("invalid field (%s) for type: %s", propName, dataSource.Type)
 					}
 
 					log.Warn(fmt.Sprintf("[WARN] Ignoring invalid field (%s) for type: %s", propName, dataSource.Type))
@@ -170,18 +170,18 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 				switch propVal.(type) {
 				case int:
 					if dst.ConfigurationSchema.Properties[propName].Type != "number" {
-						return nil, fmt.Errorf("Invalid value type for %s", propName)
+						return nil, fmt.Errorf("invalid value type for %s", propName)
 					}
 				case string:
 					if dst.ConfigurationSchema.Properties[propName].Type != "string" {
-						return nil, fmt.Errorf("Invalid value type for %s", propName)
+						return nil, fmt.Errorf("invalid value type for %s", propName)
 					}
 				case bool:
 					if dst.ConfigurationSchema.Properties[propName].Type != "boolean" {
-						return nil, fmt.Errorf("Invalid value type for %s", propName)
+						return nil, fmt.Errorf("invalid value type for %s", propName)
 					}
 				default:
-					return nil, fmt.Errorf("Invalid value type for %s", propName)
+					return nil, fmt.Errorf("invalid value type for %s", propName)
 				}
 			}
 		}
@@ -190,7 +190,7 @@ func (c *Client) SanitizeDataSourceOptions(dataSource *DataSource) (*DataSource,
 	return dataSource, nil
 }
 
-//CreateDataSource creates a new DataSource
+// CreateDataSource creates a new DataSource
 func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, error) {
 	path := "/api/data_sources"
 
@@ -210,8 +210,8 @@ func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, e
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -226,7 +226,7 @@ func (c *Client) CreateDataSource(dataSourcePayload *DataSource) (*DataSource, e
 	return &dataSource, nil
 }
 
-//UpdateDataSource Updates an existing DataSource
+// UpdateDataSource Updates an existing DataSource
 func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataSource, error) {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 
@@ -246,8 +246,8 @@ func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataS
 		return nil, err
 	}
 
-	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body)
+	defer func() { _ = response.Body.Close() }()
+	body, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -262,7 +262,7 @@ func (c *Client) UpdateDataSource(id int, dataSourcePayload *DataSource) (*DataS
 	return &dataSource, nil
 }
 
-//DeleteDataSource deletes a specific DataSource
+// DeleteDataSource deletes a specific DataSource
 func (c *Client) DeleteDataSource(id int) error {
 	path := "/api/data_sources/" + strconv.Itoa(id)
 

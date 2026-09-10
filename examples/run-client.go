@@ -29,7 +29,7 @@ func main() {
 	log.SetLevel(log.DebugLevel)
 	c, err := redash.NewClient(&redash.Config{RedashURI: hostname, APIKey: apiKey})
 	if err != nil {
-		log.Fatal(fmt.Errorf("Error loading client: %q", err))
+		log.Fatal(fmt.Errorf("error loading client: %q", err))
 		return
 	}
 
@@ -41,7 +41,7 @@ func main() {
 		log.Fatal(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("GetDataSource - %#v", dataSource))
+	fmt.Printf("GetDataSource - %#v\n", dataSource)
 
 	// DataSource creation
 	postPayload := redash.DataSource{
@@ -61,7 +61,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("CreateDataSource - %#v", newDataSource))
+	fmt.Printf("CreateDataSource - %#v\n", newDataSource)
 
 	postPayload = redash.DataSource{
 		Name: "My new Redshift data source v2",
@@ -80,15 +80,15 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("UpdateDataSource - %#v", newDataSource))
+	fmt.Printf("UpdateDataSource - %#v\n", newDataSource)
 
 	// --- Group interactions
 	group, err := c.GetGroup(1)
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error retreiving group: %q", err))
+		fmt.Println(fmt.Errorf("error retrieving group: %q", err))
 		return
 	}
-	fmt.Println(fmt.Sprintf("GetGroup - %#v", group))
+	fmt.Printf("GetGroup - %#v\n", group)
 
 	// Create a new group
 	groupPayload := redash.GroupCreatePayload{
@@ -97,10 +97,10 @@ func main() {
 
 	newGroup, err := c.CreateGroup(&groupPayload)
 	if err != nil {
-		fmt.Println(fmt.Errorf("Error creating group: %q", err))
+		fmt.Println(fmt.Errorf("error creating group: %q", err))
 		return
 	}
-	fmt.Println(fmt.Sprintf("CreateGroup - %#v", newGroup))
+	fmt.Printf("CreateGroup - %#v\n", newGroup)
 
 	// Add a user to new group
 	err = c.GroupAddUser(newGroup.ID, 1)
@@ -113,7 +113,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("GroupAddUser>GetDataSource - %#v", dataSource))
+	fmt.Printf("GroupAddUser>GetDataSource - %#v\n", dataSource)
 
 	// Add a data source to new group
 	err = c.GroupAddDataSource(newGroup.ID, newDataSource.ID)
@@ -126,7 +126,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("GroupAddDataSource>GetDataSource - %#v", dataSource))
+	fmt.Printf("GroupAddDataSource>GetDataSource - %#v\n", dataSource)
 
 	// Remove user from new group
 	err = c.GroupRemoveUser(newGroup.ID, 1)
@@ -139,7 +139,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("GroupRemoveUser>GetGroup - %#v", newGroup))
+	fmt.Printf("GroupRemoveUser>GetGroup - %#v\n", newGroup)
 
 	// --- Cleanup
 	err = c.GroupRemoveDataSource(newGroup.ID, newDataSource.ID)
@@ -152,7 +152,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(fmt.Sprintf("GroupRemoveDataSource>GetDataSource - %#v", dataSource))
+	fmt.Printf("GroupRemoveDataSource>GetDataSource - %#v\n", dataSource)
 
 	// Delete data source
 	err = c.DeleteDataSource(newDataSource.ID)
