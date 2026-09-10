@@ -1,15 +1,16 @@
 # Redash API Client #
-[![Actions Status][actions-image]][actions] [![Go Report Card][goreport-image]][goreport] [![Release][release-image]][releases] [![License][license-image]][license]
+[![Actions Status][actions-image]][actions] [![Release][release-image]][releases] [![License][license-image]][license]
 
 ## Overview ##
 
-A Simple API client library for interacting with Redash written in Go. 
+A Simple API client library for interacting with Redash written in Go.
 
 ## Quick start ##
 
 ### Using go modules (aka. `go mod`) ###
 
 In your go files, simply use:
+
 ```go
 import "github.com/snowplow-devops/redash-client-go/redash"
 ```
@@ -20,7 +21,7 @@ _Note_: you can use `go mod vendor` to vendor your dependencies.
 
 From there, you will need to setup a new client in order to access API methods:
 
-```
+```go
 config := redash.Config{
   RedashURI: "https://acme.com/",
   APIKey: "<Your personal API token from your Redash user profile>",
@@ -62,11 +63,17 @@ $ make format
 
 **Note:** Always run `format` before submitting any code.
 
+To lint the golang code in the source directory (using [golangci-lint](https://golangci-lint.run/)):
+
+```bash
+$ make lint
+```
+
 **Note:** The `make test` command also generates a code coverage file which can be found at `build/coverage/coverage.html`.
 
 ### Copyright and license
 
-The Redash Go Client is copyright 2019-2022 Snowplow Analytics Ltd.
+The Redash Go Client is copyright 2019-current Snowplow Analytics Ltd.
 
 Licensed under the **[Apache License, Version 2.0][license]** (the "License");
 you may not use this software except in compliance with the License.
@@ -85,6 +92,3 @@ limitations under the License.
 
 [license-image]: http://img.shields.io/badge/license-Apache--2-blue.svg?style=flat
 [license]: http://www.apache.org/licenses/LICENSE-2.0
-
-[goreport-image]: https://goreportcard.com/badge/github.com/snowplow-devops/redash-client-go
-[goreport]: https://goreportcard.com/report/github.com/snowplow-devops/redash-client-go

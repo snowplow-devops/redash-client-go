@@ -16,12 +16,18 @@ package redash
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
 
 	log "github.com/sirupsen/logrus"
 )
+
+// maxErrorBodySnippet caps how much of a non-2xx response body gets
+// included in the returned error, so a large HTML error page doesn't
+// blow up the error message.
+const maxErrorBodySnippet = 500
 
 // Client contains an active Redash API client
 type Client struct {
@@ -39,15 +45,15 @@ type Config struct {
 func NewClient(config *Config) (*Client, error) {
 	redashURI, err := url.ParseRequestURI(config.RedashURI)
 	if err != nil {
-		return nil, fmt.Errorf("Missing or invalid RedashURI")
+		return nil, fmt.Errorf("missing or invalid RedashURI")
 	}
 
 	if redashURI.Scheme != "http" && redashURI.Scheme != "https" {
-		return nil, fmt.Errorf("Only HTTP(S) URIs allowed")
+		return nil, fmt.Errorf("only HTTP(S) URIs allowed")
 	}
 
 	if config.APIKey == "" {
-		return nil, fmt.Errorf("Missing APIKey")
+		return nil, fmt.Errorf("missing APIKey")
 	}
 
 	c := &Client{Config: config}
@@ -83,7 +89,18 @@ func (c *Client) doRequest(method, path, body string, query url.Values) (*http.R
 	}
 
 	if response.StatusCode < 200 || response.StatusCode > 299 {
-		return nil, fmt.Errorf("HTTP Response: %d", response.StatusCode)
+		defer func() { _ = response.Body.Close() }()
+		body, _ := io.ReadAll(response.Body)
+
+		snippet := strings.TrimSpace(string(body))
+		if len(snippet) > maxErrorBodySnippet {
+			snippet = snippet[:maxErrorBodySnippet] + "..."
+		}
+		if snippet == "" {
+			return nil, fmt.Errorf("HTTP Response: %d", response.StatusCode)
+		}
+
+		return nil, fmt.Errorf("HTTP Response: %d: %s", response.StatusCode, snippet)
 	}
 
 	return response, nil
@@ -95,10 +112,6 @@ func (c *Client) get(path string, query url.Values) (*http.Response, error) {
 
 func (c *Client) post(path string, payload string, query url.Values) (*http.Response, error) {
 	return c.doRequest(http.MethodPost, path, payload, query)
-}
-
-func (c *Client) put(path string, payload string, query url.Values) (*http.Response, error) {
-	return c.doRequest(http.MethodPut, path, payload, query)
 }
 
 func (c *Client) delete(path string, query url.Values) (*http.Response, error) {
