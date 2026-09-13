@@ -62,7 +62,6 @@ func (c *Client) GetDataSources() (*[]DataSource, error) {
 	path := "/api/data_sources"
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +107,6 @@ func (c *Client) GetDataSourceTypes() ([]DataSourceType, error) {
 	path := "/api/data_sources/types"
 	query := url.Values{}
 	response, err := c.get(path, query)
-
 	if err != nil {
 		return nil, err
 	}

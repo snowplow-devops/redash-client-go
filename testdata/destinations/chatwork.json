@@ -1,0 +1,10 @@
+{
+  "id": 1,
+  "name": "Test ChatWork",
+  "type": "chatwork",
+  "icon": "fa-comment",
+  "options": {
+    "api_token": "--------",
+    "room_id": "123"
+  }
+}
