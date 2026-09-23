@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "name": "Test PagerDuty",
+  "type": "pagerduty",
+  "options": {
+    "integration_key": "--------"
+  }
+}

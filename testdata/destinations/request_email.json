@@ -1,0 +1,7 @@
+{
+  "name": "Test Email",
+  "type": "email",
+  "options": {
+    "addresses": "test@mail.com"
+  }
+}

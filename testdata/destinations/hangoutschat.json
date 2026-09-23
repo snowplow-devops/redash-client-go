@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "Test Google Hangouts Chat",
+  "type": "hangouts_chat",
+  "icon": "fa-bolt",
+  "options": {
+    "url": "--------"
+  }
+}
