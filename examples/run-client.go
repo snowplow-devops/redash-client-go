@@ -161,4 +161,54 @@ func main() {
 		return
 	}
 
+	// --- Alert destination interactions
+	// Create a new alert destination
+	destinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {}}`)
+	newDestination, err := c.CreateDestination(destinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	destination, ok := newDestination.(*redash.SlackDestination)
+	if !ok {
+		log.Fatalf("expected *redash.SlackDestination, got %T", newDestination)
+		return
+	}
+	fmt.Printf("Destination %#v created\n", destination.Name)
+
+	// Get the destination
+	getDestinationResponse, err := c.GetDestination(destination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	destination, ok = getDestinationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatalf("expected *redash.SlackDestination, got %T", getDestinationResponse)
+		return
+	}
+	fmt.Printf("The destination is %#v\n", destination.Name)
+
+	// Update the destination
+	updateDestinationPayload := []byte(`{"name": "Slack", "type": "slack", "options": {"url": "https://test.slack.com/hook"}}`)
+	updateDestinationResponse, err := c.UpdateDestination(destination.ID, updateDestinationPayload)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	destination, ok = updateDestinationResponse.(*redash.SlackDestination)
+	if !ok {
+		log.Fatalf("expected *redash.SlackDestination, got %T", updateDestinationResponse)
+		return
+	}
+	fmt.Printf("The destination %#v updated\n", destination.Name)
+
+	// Delete the destination
+	err = c.DeleteDestination(destination.ID)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	fmt.Printf("The destination %#v deleted\n", destination.Name)
 }

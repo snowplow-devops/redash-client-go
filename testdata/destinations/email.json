@@ -1,0 +1,9 @@
+{
+  "id": 1,
+  "name": "Test Email",
+  "type": "email",
+  "icon": "fa-envelope",
+  "options": {
+    "addresses": "test@mail.com"
+  }
+}
