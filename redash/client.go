@@ -39,6 +39,9 @@ type Config struct {
 	RedashURI  string
 	APIKey     string
 	StrictMode bool
+	// HTTPClient is used for API requests when set. Nil keeps http.DefaultClient,
+	// which preserves behaviour for existing callers.
+	HTTPClient *http.Client
 }
 
 // NewClient returns a *Client from a valid *Config
@@ -82,7 +85,7 @@ func (c *Client) doRequest(method, path, body string, query url.Values) (*http.R
 		request.Header.Set("Authorization", "Key "+c.Config.APIKey)
 		request.URL.RawQuery = query.Encode()
 
-		return http.DefaultClient.Do(request)
+		return c.httpClient().Do(request)
 	}()
 	if err != nil {
 		return nil, err
@@ -104,6 +107,13 @@ func (c *Client) doRequest(method, path, body string, query url.Values) (*http.R
 	}
 
 	return response, nil
+}
+
+func (c *Client) httpClient() *http.Client {
+	if c.Config.HTTPClient != nil {
+		return c.Config.HTTPClient
+	}
+	return http.DefaultClient
 }
 
 func (c *Client) get(path string, query url.Values) (*http.Response, error) {
